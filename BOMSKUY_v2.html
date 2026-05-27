@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>BOMSKUY – Rebut Kemerdekaan!</title>
+  <style>
+/* ═══════════════════════════════════════════════════════════
+   BOMSKUY — game.css
+   Tema: Perjuangan Kemerdekaan Indonesia
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CSS Variables ─────────────────────────────────────── */
+:root {
+  --bg:       #07080e;
+  --bg2:      #0d1420;
+  --panel:    #111c2a;
+  --border:   #1e3040;
+  --gold:     #d4a017;
+  --gold2:    #f0c040;
+  --red:      #b91c1c;
+  --red2:     #ef4444;
+  --white:    #f5f0e0;
+  --green:    #166534;
+  --green2:   #22c55e;
+  --text:     #e8dcc8;
+  --dim:      #7a6a50;
+  --serif:    Georgia, 'Times New Roman', serif;
+  --sans:     system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --title:    Georgia, 'Times New Roman', serif;
+  --sgold:    0 0 22px rgba(212,160,23,0.55);
+  --sred:     0 0 22px rgba(185,28,28,0.55);
+}
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+html, body {
+  width:100%; height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  overflow:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+/* ── Screen system ─────────────────────────────────────── */
+.screen {
+  position:fixed; inset:0;
+  display:none; flex-direction:column;
+  align-items:center; overflow:hidden;
+}
+.screen.active { display:flex; }
+.hidden { display:none !important; }
+
+/* ═══════════════════════════════════════════════════════
+   SHARED BACKGROUND — Sejarah Islam / Indonesia motifs
+═══════════════════════════════════════════════════════ */
+.hist-bg {
+  position:fixed; inset:0; z-index:0; overflow:hidden;
+  pointer-events:none;
+}
+
+/* Animated SVG-based background pattern */
+.hist-bg::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:
+    /* Mosque dome silhouettes */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='180'%3E%3Cg fill='none' stroke='rgba(212,160,23,0.07)' stroke-width='1'%3E%3C!-- minaret --%3E%3Crect x='88' y='40' width='14' height='100' stroke-width='0.8'/%3E%3Crect x='84' y='80' width='22' height='8'/%3E%3C!-- dome --%3E%3Cellipse cx='95' cy='42' rx='18' ry='16'/%3E%3Ccircle cx='95' cy='26' r='4'/%3E%3Cline x1='95' y1='22' x2='95' y2='15'/%3E%3C!-- crescent --%3E%3Cpath d='M 90 15 A 6 6 0 1 1 100 15 A 4 4 0 1 0 90 15'/%3E%3C/g%3E%3C/svg%3E"),
+    /* Batik kawung pattern */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(212,160,23,0.04)' stroke-width='0.8'%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='8'/%3E%3Ccircle cx='12' cy='40' r='8'/%3E%3Ccircle cx='68' cy='40' r='8'/%3E%3Ccircle cx='40' cy='12' r='8'/%3E%3Ccircle cx='40' cy='68' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 200px 180px, 80px 80px;
+  background-position: 0 0, 40px 40px;
+  animation: bgshift 30s linear infinite;
+}
+
+@keyframes bgshift {
+  from { background-position: 0 0, 40px 40px; }
+  to   { background-position: 200px 180px, 120px 120px; }
+}
+
+/* Gradient radial overlays */
+.hist-bg-intro {
+  background:
+    radial-gradient(ellipse 60% 45% at 8% 8%,  rgba(139,37,0,.22)  0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 92% 92%, rgba(22,101,52,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 30% at 50% 50%, rgba(212,160,23,.06) 0%, transparent 60%),
+    var(--bg);
+}
+.hist-bg-menu {
+  background:
+    radial-gradient(ellipse 65% 50% at 10% 15%, rgba(185,28,28,.18) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 65% at 90% 85%, rgba(22,101,52,.14) 0%, transparent 58%),
+    var(--bg);
+}
+.hist-bg-end {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 20%, rgba(185,28,28,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 75%, rgba(212,160,23,.10) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SHARED UI COMPONENTS
+═══════════════════════════════════════════════════════ */
+
+/* Buttons */
+.btn-red {
+  width:100%; padding:14px;
+  background:linear-gradient(135deg,var(--red),#dc2626);
+  border:none; border-radius:10px;
+  color:#fff; font-family:var(--title); font-size:.8rem;
+  letter-spacing:1px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  transition:all .2s; box-shadow:var(--sred);
+}
+.btn-red:hover { filter:brightness(1.12); transform:translateY(-2px); }
+.btn-red small { font-family:var(--sans); font-size:.55rem; opacity:.65; }
+
+.btn-sec {
+  width:100%; padding:11px;
+  background:transparent; border:2px solid var(--border);
+  border-radius:10px; color:var(--dim);
+  font-family:var(--sans); font-size:.7rem; cursor:pointer;
+  transition:all .2s;
+}
+.btn-sec:hover { border-color:var(--dim); color:var(--text); }
+
+.btn-gold {
+  width:100%; padding:13px;
+  background:linear-gradient(135deg,var(--gold),#b8880d);
+  border:none; border-radius:10px; color:#000;
+  font-family:var(--title); font-size:.72rem;
+  cursor:pointer; transition:all .2s; box-shadow:var(--sgold);
+}
+.btn-gold:hover { filter:brightness(1.1); transform:translateY(-2px); }
+
+.btn-story {
+  background:var(--bg2); border:1.5px solid var(--border);
+  border-radius:8px; padding:8px 16px;
+  color:var(--text); font-family:var(--sans);
+  font-size:.7rem; cursor:pointer; transition:all .2s;
+}
+.btn-story:hover:not(:disabled) { border-color:var(--gold); color:var(--gold); }
+.btn-story:disabled { opacity:.32; cursor:default; }
+
+/* Pulse animation */
+.pulse { animation:pulse-a 2s ease-in-out infinite; }
+@keyframes pulse-a {
+  0%,100% { box-shadow:0 0 18px rgba(185,28,28,.5); }
+  50%      { box-shadow:0 0 40px rgba(185,28,28,.9); }
+}
+
+/* Story/page system */
+.story-header {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  margin-bottom:14px;
+}
+.story-header h2 {
+  font-family:var(--title); font-size:1rem;
+  color:var(--gold2); letter-spacing:1px;
+  text-shadow:var(--sgold);
+}
+.s-icon { font-size:1.2rem; }
+
+.story-nav { display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:14px; }
+.story-btns { display:flex; gap:10px; }
+.dots-row { display:flex; gap:6px; }
+.sdot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--border); cursor:pointer; transition:background .2s;
+}
+.sdot.on { background:var(--gold); }
+
+/* Cards */
+.card {
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:16px; padding:22px;
+  box-shadow:0 8px 36px rgba(0,0,0,.65), inset 0 1px 0 rgba(212,160,23,.07);
+}
+
+/* Page text styles */
+.pg-text {
+  font-family:var(--serif); font-size:.82rem;
+  line-height:1.88; color:var(--text); text-align:justify;
+}
+.pg-text .pt { /* page title */
+  font-family:var(--title); font-size:.95rem;
+  color:var(--gold2); display:block;
+  margin-bottom:10px; text-align:center;
+  text-shadow:var(--sgold);
+}
+.pg-text .pq { /* quote */
+  display:block; margin:10px 0;
+  font-style:italic; color:var(--gold);
+  border-left:3px solid var(--gold); padding-left:10px;
+}
+.pg-text .py { /* year badge */
+  display:inline-block; background:var(--red);
+  color:#fff; font-family:var(--title);
+  font-size:.6rem; padding:2px 8px;
+  border-radius:4px; margin-right:6px;
+}
+.pg-text em { color:var(--gold2); font-style:normal; font-weight:700; }
+
+/* ═══════════════════════════════════════════════════════
+   INTRO SCREEN
+═══════════════════════════════════════════════════════ */
+#screen-intro { overflow-y:auto; background:var(--bg); }
+
+.intro-wrap {
+  position:relative; z-index:1;
+  width:100%; max-width:700px; margin:0 auto;
+  padding:18px 14px 40px;
+  display:flex; flex-direction:column; align-items:center; gap:20px;
+}
+
+.intro-logo { text-align:center; padding-top:4px; }
+.logo-bomb {
+  font-size:3rem; display:block;
+  animation:float 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 12px rgba(212,160,23,.7));
+  margin-bottom:6px;
+}
+@keyframes float {
+  0%,100% { transform:translateY(0) rotate(-5deg); }
+  50%      { transform:translateY(-10px) rotate(5deg); }
+}
+.logo-title {
+  font-family:var(--title); font-size:clamp(2rem,8vw,3.2rem);
+  color:var(--white);
+  text-shadow:0 0 40px rgba(212,160,23,.7), 3px 3px 0 rgba(0,0,0,.8);
+  letter-spacing:4px;
+}
+.logo-title span { color:var(--gold2); }
+.logo-sub { font-size:.68rem; color:var(--dim); letter-spacing:2px; margin-top:6px; }
+
+.story-card { width:100%; }
+.story-pages { min-height:220px; }
+.s-page { display:none; }
+.s-page.on { display:block; }
+
+/* ═══════════════════════════════════════════════════════
+   MENU SCREEN
+═══════════════════════════════════════════════════════ */
+#screen-menu { overflow-y:auto; background:var(--bg); }
+
+/* Mini flag corner */
+.flag-corner {
+  position:absolute; top:0; right:0;
+  width:72px; height:48px; opacity:.13;
+  overflow:hidden; border-radius:0 0 0 8px;
+  z-index:0;
+}
+.flag-corner div { width:100%; height:50%; }
+.flag-r { background:#c0392b; }
+.flag-w { background:#f5f0e0; }
+
+.menu-wrap {
+  position:relative; z-index:1;
+  width:100%; max-width:680px; margin:0 auto;
+  padding:16px 13px 36px;
+  display:flex; flex-direction:column; align-items:center; gap:17px;
+}
+
+/* Menu logo (smaller) */
+.menu-logo-bomb {
+  font-size:2.5rem; display:block;
+  animation:float 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 10px rgba(212,160,23,.6));
+  margin-bottom:4px;
+}
+.menu-logo-title {
+  font-family:var(--title); font-size:clamp(1.8rem,7vw,2.8rem);
+  color:var(--white);
+  text-shadow:0 0 28px rgba(212,160,23,.7), 3px 3px 0 rgba(0,0,0,.8);
+  letter-spacing:3px; text-align:center;
+}
+.menu-logo-title span { color:var(--gold2); }
+.menu-logo-tag { font-size:.63rem; color:var(--dim); letter-spacing:2px; margin-top:4px; text-align:center; }
+
+/* Tabs */
+.menu-tabs {
+  display:flex; gap:5px; width:100%;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:12px; padding:5px;
+}
+.mtab {
+  flex:1; padding:9px 6px;
+  background:transparent; border:none; border-radius:8px;
+  color:var(--dim); font-family:var(--sans);
+  font-size:.72rem; font-weight:600; cursor:pointer; transition:all .2s;
+}
+.mtab.on { background:var(--gold); color:#000; box-shadow:var(--sgold); }
+.mtab:hover:not(.on) { color:var(--text); }
+
+.tab-panel { display:none; width:100%; }
+.tab-panel.on { display:block; }
+
+/* Form inside card */
+.form-row label {
+  display:block; font-size:.57rem;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--dim); margin-bottom:7px;
+}
+.form-row input {
+  width:100%; background:var(--bg2); border:1.5px solid var(--border);
+  border-radius:8px; padding:10px 13px; color:var(--text);
+  font-family:var(--sans); font-size:.9rem; outline:none; transition:all .2s;
+}
+.form-row input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,160,23,.18); }
+.form-row input::placeholder { color:var(--border); }
+
+/* Difficulty grid */
+.diff-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+@media(max-width:480px){ .diff-grid{grid-template-columns:repeat(2,1fr);} }
+.diff-btn {
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  background:var(--bg2); border:2px solid var(--border);
+  border-radius:10px; padding:9px 5px;
+  cursor:pointer; color:var(--text); font-family:var(--sans);
+  transition:all .2s;
+}
+.diff-btn span { font-size:1.1rem; }
+.diff-btn b { font-size:.5rem; letter-spacing:1px; }
+.diff-btn small { font-size:.46rem; color:var(--dim); text-align:center; }
+.diff-btn:hover { border-color:var(--gold); transform:translateY(-2px); }
+.diff-btn.on { border-color:var(--gold); background:rgba(212,160,23,.1); box-shadow:var(--sgold); }
+
+/* Skin preview row */
+.skin-prev-row {
+  display:flex; align-items:center; gap:11px; flex-wrap:wrap;
+  background:var(--bg2); border-radius:10px; padding:9px 12px;
+}
+.skin-prev-item { display:flex; align-items:center; gap:7px; }
+.skin-prev-item span { font-size:.54rem; color:var(--dim); white-space:nowrap; }
+.skin-prev-item b { font-size:.58rem; color:var(--gold); white-space:nowrap; }
+.skin-prev-item canvas {
+  border:1px solid var(--border); border-radius:6px;
+  background:var(--panel); image-rendering:pixelated;
+  display:block;
+}
+.btn-skin-link {
+  margin-left:auto; background:transparent;
+  border:1.5px solid var(--gold); border-radius:8px;
+  padding:6px 11px; color:var(--gold);
+  font-size:.58rem; cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.btn-skin-link:hover { background:var(--gold); color:#000; }
+
+.ctrl-hint {
+  display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+  font-size:.58rem; color:var(--dim); padding:5px 0;
+}
+
+/* ── Skin Gallery ────────────────────────────────────────── */
+.skin-section { margin-bottom:16px; }
+.skin-section h3 { font-size:.7rem; font-weight:700; color:var(--gold2); letter-spacing:1px; margin-bottom:10px; }
+.skin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+
+.skin-card {
+  background:var(--panel); border:2px solid var(--border);
+  border-radius:12px; padding:10px 6px;
+  text-align:center; cursor:pointer; transition:all .2s;
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+}
+.skin-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+.skin-card.on { border-color:var(--gold2); background:rgba(212,160,23,.1); box-shadow:var(--sgold); }
+.skin-card canvas {
+  image-rendering:pixelated; border-radius:4px;
+  display:block;           /* FIX: was not rendering */
+  background:#1a1510;
+}
+.sk-check { font-size:.85rem; opacity:0; display:block; }
+.skin-card.on .sk-check { opacity:1; }
+.sk-name { font-size:.5rem; font-weight:700; color:var(--text); line-height:1.3; display:block; }
+.sk-lore { font-size:.43rem; color:var(--dim); line-height:1.4; display:block; }
+
+/* ── Leaderboard ─────────────────────────────────────────── */
+.scores-title { font-size:.68rem; letter-spacing:2px; color:var(--gold); margin-bottom:10px; }
+#leaderboard { display:flex; flex-direction:column; gap:5px; }
+.lb-row { display:flex; align-items:center; gap:9px; padding:7px 10px; background:var(--bg2); border-radius:8px; font-size:.7rem; }
+.lb-rank { font-family:var(--title); font-size:.72rem; min-width:24px; }
+.lb-name { flex:1; }
+.lb-diff { font-size:.46rem; color:var(--dim); }
+.lb-score { font-weight:700; color:var(--gold2); }
+
+/* ═══════════════════════════════════════════════════════
+   GAME SCREEN
+═══════════════════════════════════════════════════════ */
+#screen-game { background:var(--bg); }
+
+.hud {
+  display:flex; align-items:center; width:100%;
+  background:var(--panel); border-bottom:2px solid var(--border);
+  padding:6px 12px; gap:10px; flex-shrink:0;
+  background-image:linear-gradient(90deg,rgba(185,28,28,.15) 0%,transparent 28%,transparent 72%,rgba(22,101,52,.12) 100%);
+}
+.hud-l,.hud-r { display:flex; gap:10px; align-items:center; }
+.hud-c { flex:1; text-align:center; }
+.hud-item { display:flex; flex-direction:column; }
+.hud-item span { font-size:.37rem; letter-spacing:2px; color:var(--dim); text-transform:uppercase; }
+.hud-item b { font-size:.73rem; font-weight:700; color:var(--gold2); }
+.hud-score { font-size:1.2rem !important; color:var(--gold) !important; text-shadow:var(--sgold); }
+.hud-btn { background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:5px 8px; color:var(--text); cursor:pointer; font-size:.85rem; transition:background .15s; }
+.hud-btn:hover { background:var(--border); }
+
+.game-wrap {
+  flex:1; display:flex; justify-content:center; align-items:center;
+  overflow:auto; padding:5px;
+}
+#game-canvas { display:block; image-rendering:pixelated; border:2px solid var(--border); border-radius:6px; box-shadow:0 0 40px rgba(0,0,0,.8); }
+
+.status-bar {
+  display:flex; align-items:center; justify-content:center; gap:16px;
+  padding:5px 10px; background:var(--panel); border-top:1px solid var(--border); flex-shrink:0;
+}
+.pu-slot { display:flex; align-items:center; gap:5px; font-size:.7rem; font-weight:700; color:var(--gold2); }
+.pu-slot.speed-on { color:var(--green2); animation:blink .5s infinite alternate; }
+@keyframes blink { from{opacity:1;} to{opacity:.4;} }
+.mission-txt { font-size:.58rem; color:var(--dim); letter-spacing:.8px; margin-left:auto; }
+
+/* Mobile D-pad */
+.dpad-wrap {
+  display:none; padding:8px 14px;
+  background:var(--panel); border-top:1px solid var(--border);
+  justify-content:space-between; align-items:center; flex-shrink:0;
+}
+.dpad { display:grid; grid-template-columns:repeat(3,52px); grid-template-rows:repeat(3,52px); gap:3px; }
+.dp {
+  background:var(--bg2); border:2px solid var(--border); border-radius:8px;
+  color:var(--text); font-size:.95rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent; transition:background .08s;
+  touch-action:none;
+}
+.dp:active,.dp.pressed { background:var(--border); }
+.dp-up    { grid-column:2; grid-row:1; }
+.dp-left  { grid-column:1; grid-row:2; }
+.dp-mid   { grid-column:2; grid-row:2; background:transparent; border:none; pointer-events:none; }
+.dp-right { grid-column:3; grid-row:2; }
+.dp-down  { grid-column:2; grid-row:3; }
+.bomb-btn {
+  width:66px; height:66px; background:var(--red); border:none; border-radius:50%;
+  font-size:1.7rem; cursor:pointer; box-shadow:var(--sred);
+  -webkit-tap-highlight-color:transparent; touch-action:none;
+  transition:transform .08s;
+}
+.bomb-btn:active,.bomb-btn.pressed { transform:scale(.88); }
+
+@media(max-width:600px) { .dpad-wrap{display:flex;} .ctrl-hint{display:none;} }
+@media(hover:none) and (pointer:coarse) { .dpad-wrap{display:flex;} }
+
+/* ═══════════════════════════════════════════════════════
+   OVERLAYS
+═══════════════════════════════════════════════════════ */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.8); backdrop-filter:blur(7px);
+  display:flex; align-items:center; justify-content:center; z-index:200;
+  animation:fin .3s ease;
+}
+@keyframes fin { from{opacity:0;} to{opacity:1;} }
+
+.ov-card {
+  background:var(--panel); border:1px solid var(--border); border-radius:20px;
+  padding:28px 24px; text-align:center; max-width:400px; width:92%;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+  animation:sup .3s ease; position:relative; overflow:hidden;
+}
+@keyframes sup { from{transform:translateY(28px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.ov-card h2 { font-family:var(--title); font-size:1.1rem; letter-spacing:1px; }
+.ov-card p  { font-size:.7rem; color:var(--dim); }
+.ov-quote   { font-family:var(--serif); font-style:italic; color:var(--gold) !important; font-size:.68rem !important; border-left:3px solid var(--gold); padding-left:9px; text-align:left; }
+.go-card h2 { color:var(--red2); text-shadow:var(--sred); }
+.ov-icon { font-size:3rem; animation:bounce 1s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+.result-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%; }
+.ri { background:var(--bg2); border-radius:8px; padding:9px; display:flex; flex-direction:column; gap:3px; }
+.ri span { font-size:.46rem; color:var(--dim); text-transform:uppercase; letter-spacing:1px; }
+.ri b { font-size:1rem; color:var(--gold2); }
+.ov-btns { display:flex; flex-direction:column; gap:7px; width:100%; }
+
+/* ═══════════════════════════════════════════════════════
+   ENCYCLOPEDIA OVERLAY
+═══════════════════════════════════════════════════════ */
+#ov-encyc {
+  z-index:250;
+}
+.encyc-card {
+  background:var(--panel); border:1px solid var(--border); border-radius:20px;
+  padding:24px; max-width:560px; width:95%;
+  display:flex; flex-direction:column; gap:14px;
+  box-shadow:0 20px 60px rgba(0,0,0,.85);
+  animation:sup .3s ease; max-height:85vh; overflow-y:auto;
+}
+.encyc-card h2 {
+  font-family:var(--title); font-size:1rem; color:var(--gold2);
+  text-shadow:var(--sgold); text-align:center; letter-spacing:1px;
+}
+.encyc-close {
+  position:absolute; top:12px; right:16px;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:6px; padding:4px 9px;
+  color:var(--text); font-size:.75rem; cursor:pointer;
+}
+.encyc-tabs {
+  display:flex; gap:5px; flex-wrap:wrap;
+}
+.etab {
+  padding:6px 12px; background:var(--bg2);
+  border:1.5px solid var(--border); border-radius:8px;
+  color:var(--dim); font-size:.62rem; cursor:pointer; transition:all .2s;
+}
+.etab.on { background:var(--gold); border-color:var(--gold); color:#000; }
+.etab:hover:not(.on) { border-color:var(--gold); color:var(--gold); }
+.encyc-content { display:none; }
+.encyc-content.on { display:block; }
+.encyc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; }
+.encyc-item {
+  background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+  padding:12px; display:flex; flex-direction:column; gap:6px;
+}
+.ei-head { display:flex; align-items:center; gap:8px; }
+.ei-icon { font-size:1.6rem; flex-shrink:0; }
+.ei-name { font-size:.65rem; font-weight:700; color:var(--gold2); }
+.ei-type { font-size:.5rem; color:var(--dim); text-transform:uppercase; letter-spacing:1px; }
+.ei-desc { font-size:.62rem; color:var(--text); line-height:1.6; font-family:var(--serif); }
+.ei-tip  { font-size:.56rem; color:var(--green2); font-style:italic; margin-top:3px; }
+
+/* ═══════════════════════════════════════════════════════
+   ENDING SCREEN
+═══════════════════════════════════════════════════════ */
+#screen-ending { overflow-y:auto; background:var(--bg); }
+
+.ending-flag-anim {
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:110px; height:74px; opacity:.14; border-radius:4px; overflow:hidden;
+  animation:flagwave 3s ease-in-out infinite;
+}
+.eflag-r { background:#c0392b; width:100%; height:50%; }
+.eflag-w { background:#f5f0e0; width:100%; height:50%; }
+@keyframes flagwave {
+  0%,100% { transform:translateX(-50%) skewX(0deg); }
+  50%      { transform:translateX(-50%) skewX(-3deg); }
+}
+
+.ending-wrap {
+  position:relative; z-index:1;
+  width:100%; max-width:700px; margin:0 auto;
+  padding:18px 13px 44px;
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+}
+.ending-title {
+  font-family:var(--title); font-size:clamp(1.8rem,6vw,3rem);
+  color:var(--gold2); text-shadow:var(--sgold),3px 3px 0 rgba(0,0,0,.8);
+  letter-spacing:2px; text-align:center;
+}
+.ending-sub { font-size:.72rem; color:var(--dim); letter-spacing:2px; text-align:center; margin-top:5px; }
+.ending-pages { min-height:200px; }
+.e-page { display:none; }
+.e-page.on { display:block; }
+.ending-stats { display:flex; gap:11px; flex-wrap:wrap; justify-content:center; width:100%; }
+.estat {
+  background:var(--panel); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; text-align:center; display:flex; flex-direction:column; gap:4px;
+}
+.estat span { font-size:.52rem; color:var(--dim); text-transform:uppercase; letter-spacing:1px; }
+.estat b { font-size:1.05rem; color:var(--gold2); }
+.ending-btns { display:flex; flex-direction:column; gap:7px; width:100%; max-width:340px; }
+
+/* Confetti */
+.confetti { position:absolute; border-radius:2px; animation:cfall var(--dur) var(--del) linear infinite; }
+@keyframes cfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1;} 100%{transform:translateY(500px) rotate(720deg);opacity:0;} }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:86px; left:50%; transform:translateX(-50%);
+  background:var(--panel); border:1px solid var(--gold);
+  border-radius:20px; padding:8px 17px; font-size:.68rem; color:var(--text);
+  z-index:400; white-space:nowrap; animation:ta .3s ease;
+  max-width:90vw; text-overflow:ellipsis; overflow:hidden;
+}
+@keyframes ta { from{transform:translateX(-50%) translateY(10px);opacity:0;} to{transform:translateX(-50%) translateY(0);opacity:1;} }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════ INTRO / CERITA PEMBUKA ════════════════ -->
+<div id="screen-intro" class="screen active">
+  <div class="hist-bg hist-bg-intro"></div>
+  <canvas id="cv-intro-parts" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;"></canvas>
+
+  <div class="intro-wrap">
+    <div class="intro-logo">
+      <span class="logo-bomb">💣</span>
+      <h1 class="logo-title">BOM<span>SKUY</span></h1>
+      <p class="logo-sub">⚔️ Rebut Kemerdekaan Indonesia! ⚔️</p>
+    </div>
+
+    <div class="card story-card" id="story-card">
+      <div class="story-header">
+        <span class="s-icon">📜</span>
+        <h2>Kisah Perjuangan</h2>
+        <span class="s-icon">📜</span>
+      </div>
+      <div class="story-pages" id="story-pages"></div>
+      <div class="story-nav">
+        <div class="dots-row" id="story-dots"></div>
+        <div class="story-btns">
+          <button id="btn-s-prev" class="btn-story" disabled>◀ Sebelumnya</button>
+          <button id="btn-s-next" class="btn-story">Selanjutnya ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="btn-to-menu" class="btn-red hidden">
+      ⚔️ Mulai Perjuangan!
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════ MENU UTAMA ════════════════ -->
+<div id="screen-menu" class="screen">
+  <div class="hist-bg hist-bg-menu"></div>
+  <canvas id="cv-menu-parts" style="position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.38;"></canvas>
+
+  <div class="flag-corner"><div class="flag-r"></div><div class="flag-w"></div></div>
+
+  <div class="menu-wrap">
+    <div>
+      <span class="menu-logo-bomb">💣</span>
+      <h1 class="menu-logo-title">BOM<span>SKUY</span></h1>
+      <p class="menu-logo-tag">⚔️ Rebut Kemerdekaan · Lawan Penjajah ⚔️</p>
+    </div>
+
+    <div class="menu-tabs">
+      <button class="mtab on" data-tab="play">🎮 Main</button>
+      <button class="mtab" data-tab="skins">🎭 Skin</button>
+      <button class="mtab" data-tab="encyc">📚 Ensiklopedi</button>
+      <button class="mtab" data-tab="scores">🏆 Skor</button>
+    </div>
+
+    <!-- TAB: MAIN -->
+    <div id="tab-play" class="tab-panel on">
+      <div class="card" style="display:flex;flex-direction:column;gap:15px;">
+        <div class="form-row">
+          <label>👤 Nama Pahlawan</label>
+          <input type="text" id="player-name" placeholder="Masukkan nama pahlawanmu..." maxlength="20" autocomplete="off"/>
+        </div>
+        <div class="form-row">
+          <label>⚡ Tingkat Kesulitan</label>
+          <div class="diff-grid">
+            <button class="diff-btn on" data-diff="easy">
+              <span>🟢</span><b>MUDAH</b><small>Sedikit musuh</small>
+            </button>
+            <button class="diff-btn" data-diff="medium">
+              <span>🟡</span><b>SEDANG</b><small>Cukup musuh</small>
+            </button>
+            <button class="diff-btn" data-diff="hard">
+              <span>🟠</span><b>SULIT</b><small>Banyak musuh</small>
+            </button>
+            <button class="diff-btn" data-diff="extreme">
+              <span>🔴</span><b>EXTREME</b><small>Sangat banyak</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="skin-prev-row">
+          <div class="skin-prev-item">
+            <span>Pahlawan:</span>
+            <canvas id="prev-player" width="52" height="52"></canvas>
+            <b id="prev-player-name">–</b>
+          </div>
+          <div class="skin-prev-item">
+            <span>Musuh:</span>
+            <canvas id="prev-enemy" width="52" height="52"></canvas>
+            <b id="prev-enemy-name">–</b>
+          </div>
+          <button class="btn-skin-link" data-tab="skins">Ganti 🎭</button>
+        </div>
+
+        <button id="btn-start" class="btn-red pulse">
+          ▶ MULAI PERJUANGAN
+          <small>atau tekan Enter</small>
+        </button>
+      </div>
+      <div class="ctrl-hint" style="margin-top:8px;">
+        <span>⬆⬇⬅➡ / WASD Gerak</span>
+        <span>SPACE Taruh Bom</span>
+        <span>ESC Jeda</span>
+      </div>
+    </div>
+
+    <!-- TAB: SKIN -->
+    <div id="tab-skins" class="tab-panel">
+      <div class="skin-section">
+        <h3>🦸 Pilih Pahlawan (9 Skin)</h3>
+        <div id="grid-player" class="skin-grid"></div>
+      </div>
+      <div class="skin-section">
+        <h3>👹 Pilih Musuh (4 Skin)</h3>
+        <div id="grid-enemy" class="skin-grid"></div>
+      </div>
+    </div>
+
+    <!-- TAB: ENSIKLOPEDI -->
+    <div id="tab-encyc" class="tab-panel">
+      <div class="card encyc-inline-card">
+        <h3 style="font-family:var(--title);font-size:.85rem;color:var(--gold2);margin-bottom:12px;text-align:center;">📚 Ensiklopedi BOMSKUY</h3>
+
+        <div class="encyc-tabs" id="etabs-inline">
+          <button class="etab on" data-ec="walls">🧱 Tembok</button>
+          <button class="etab" data-ec="powerups">⚡ Power-Up</button>
+          <button class="etab" data-ec="spices">🌶 Rempah</button>
+          <button class="etab" data-ec="enemies">👹 Musuh</button>
+          <button class="etab" data-ec="heroes">🦸 Pahlawan</button>
+          <button class="etab" data-ec="history">📜 Sejarah</button>
+        </div>
+
+        <div id="ec-walls" class="encyc-content on">
+          <div class="encyc-grid" id="enc-walls-grid"></div>
+        </div>
+        <div id="ec-powerups" class="encyc-content">
+          <div class="encyc-grid" id="enc-powerups-grid"></div>
+        </div>
+        <div id="ec-spices" class="encyc-content">
+          <div class="encyc-grid" id="enc-spices-grid"></div>
+        </div>
+        <div id="ec-enemies" class="encyc-content">
+          <div class="encyc-grid" id="enc-enemies-grid"></div>
+        </div>
+        <div id="ec-heroes" class="encyc-content">
+          <div class="encyc-grid" id="enc-heroes-grid"></div>
+        </div>
+        <div id="ec-history" class="encyc-content">
+          <div class="encyc-grid" id="enc-history-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SKOR -->
+    <div id="tab-scores" class="tab-panel">
+      <h3 class="scores-title">🏆 Papan Skor Pejuang</h3>
+      <div id="leaderboard"></div>
+      <button id="btn-clear" class="btn-sec" style="margin-top:11px;">🗑 Hapus Semua Skor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ GAME SCREEN ════════════════ -->
+<div id="screen-game" class="screen">
+  <div class="hud">
+    <div class="hud-l">
+      <div class="hud-item"><span>PAHLAWAN</span><b id="h-name">–</b></div>
+      <div class="hud-item"><span>NYAWA</span><b id="h-lives">❤️❤️❤️</b></div>
+    </div>
+    <div class="hud-c">
+      <div class="hud-item"><span>SKOR</span><b id="h-score" class="hud-score">0</b></div>
+    </div>
+    <div class="hud-r">
+      <div class="hud-item"><span>WAKTU</span><b id="h-timer">00:00</b></div>
+      <div class="hud-item"><span>MUSUH</span><b id="h-enemies">0</b></div>
+      <div class="hud-item"><span>REMPAH</span><b id="h-spices">0/0</b></div>
+      <button id="btn-pause" class="hud-btn">⏸</button>
+    </div>
+  </div>
+
+  <div class="game-wrap">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <div class="status-bar">
+    <div class="pu-slot" id="slot-speed"><span>⚡</span><span id="pu-speed">–</span></div>
+    <div class="pu-slot"><span>💣</span><span id="pu-bombs">2</span></div>
+    <div class="pu-slot"><span>💥</span><span id="pu-radius">2</span></div>
+    <span class="mission-txt" id="mission-txt">⚔️ Kalahkan semua penjajah!</span>
+  </div>
+
+  <!-- Mobile D-Pad -->
+  <div class="dpad-wrap" id="dpad-wrap">
+    <div class="dpad">
+      <button class="dp dp-up"    data-key="ArrowUp">▲</button>
+      <button class="dp dp-left"  data-key="ArrowLeft">◄</button>
+      <div class="dp dp-mid"></div>
+      <button class="dp dp-right" data-key="ArrowRight">►</button>
+      <button class="dp dp-down"  data-key="ArrowDown">▼</button>
+    </div>
+    <button class="bomb-btn" id="mobile-bomb">💣</button>
+  </div>
+</div>
+
+<!-- ════════════════ PAUSE ════════════════ -->
+<div id="ov-pause" class="overlay hidden">
+  <div class="ov-card">
+    <h2>⏸ DIJEDA</h2>
+    <p>Perjuangan dihentikan sementara</p>
+    <button id="btn-resume" class="btn-red">▶ Lanjutkan</button>
+    <button id="btn-quit" class="btn-sec">🏠 Menu Utama</button>
+  </div>
+</div>
+
+<!-- ════════════════ GAME OVER ════════════════ -->
+<div id="ov-gameover" class="overlay hidden">
+  <div class="ov-card go-card">
+    <div class="ov-icon">💀</div>
+    <h2>GUGUR DALAM PERJUANGAN</h2>
+    <p class="ov-quote">"Lebih baik mati berkalang tanah daripada hidup bercermin bangkai."</p>
+    <div class="result-grid">
+      <div class="ri"><span>Skor</span><b id="go-score">0</b></div>
+      <div class="ri"><span>Waktu</span><b id="go-time">–</b></div>
+      <div class="ri"><span>Musuh Dikalahkan</span><b id="go-kills">0</b></div>
+      <div class="ri"><span>Rempah Dikumpulkan</span><b id="go-spices">0</b></div>
+    </div>
+    <div class="ov-btns">
+      <button id="btn-retry" class="btn-red">🔄 Coba Lagi</button>
+      <button id="btn-go-menu" class="btn-sec">🏠 Menu</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ ENDING / WIN ════════════════ -->
+<div id="screen-ending" class="screen">
+  <div class="hist-bg hist-bg-end"></div>
+  <canvas id="cv-end-parts" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <div class="ending-flag-anim">
+    <div class="eflag-r"></div><div class="eflag-w"></div>
+  </div>
+
+  <div class="ending-wrap">
+    <div>
+      <h1 class="ending-title">🇮🇩 MERDEKA! 🇮🇩</h1>
+      <p class="ending-sub">Indonesia Telah Bebas dari Penjajahan!</p>
+    </div>
+
+    <div class="card" style="width:100%;">
+      <div class="story-header">
+        <span class="s-icon">🌟</span>
+        <h2 id="end-chapter-title">Fajar Kemerdekaan</h2>
+        <span class="s-icon">🌟</span>
+      </div>
+      <div class="ending-pages" id="ending-pages"></div>
+      <div class="story-nav">
+        <div class="dots-row" id="ending-dots"></div>
+        <div class="story-btns">
+          <button id="btn-ep-prev" class="btn-story" disabled>◀</button>
+          <button id="btn-ep-next" class="btn-story">Selanjutnya ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ending-stats">
+      <div class="estat"><span>⏱ Waktu</span><b id="e-time">–</b></div>
+      <div class="estat"><span>💥 Musuh</span><b id="e-kills">–</b></div>
+      <div class="estat"><span>🌶 Rempah</span><b id="e-spices">–</b></div>
+      <div class="estat"><span>🏆 Skor</span><b id="e-score">–</b></div>
+    </div>
+
+    <div class="ending-btns">
+      <button id="btn-end-again" class="btn-red">🔄 Main Lagi</button>
+      <button id="btn-end-menu" class="btn-sec">🏠 Menu Utama</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   BOMSKUY — assets/skins.js
+   Semua fungsi gambar karakter & musuh
+   ═══════════════════════════════════════════════════════════ */
+"use strict";
+
+/* ── helpers ─────────────────────────────────────────────── */
+function shade(ctx,x,y,rx=11,ry=4){
+  ctx.fillStyle="rgba(0,0,0,0.3)";
+  ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();
+}
+
+/* ══════════════════════════════════════════════════════════
+   PLAYER SKINS  (9 total)
+══════════════════════════════════════════════════════════ */
+const PLAYER_SKINS=[
+  {id:"diponegoro",name:"Pangeran Diponegoro",lore:"Pahlawan Perang Jawa 1825–1830",draw:drawDiponegoro},
+  {id:"soekarno",  name:"Ir. Soekarno",       lore:"Proklamator & Presiden ke-1 RI",draw:drawSoekarno},
+  {id:"kartini",   name:"R.A. Kartini",        lore:"Pahlawan Emansipasi Wanita",    draw:drawKartini},
+  {id:"hatta",     name:"Mohammad Hatta",      lore:"Proklamator & Wapres ke-1 RI",  draw:drawHatta},
+  {id:"gajahmada", name:"Gajah Mada",          lore:"Mahapatih Majapahit",           draw:drawGajahMada},
+  {id:"santri",    name:"Santri Pejuang",      lore:"Pejuang pesantren & ilmu",      draw:drawSantri},
+  // 3 SKIN BARU
+  {id:"sudirman",  name:"Jend. Sudirman",      lore:"Panglima TNI pertama RI",       draw:drawSudirman},
+  {id:"pattimura", name:"Kapitan Pattimura",   lore:"Pahlawan Maluku, 1817",         draw:drawPattimura},
+  {id:"ulama",     name:"Ulama Pejuang",       lore:"Resolusi Jihad 22 Okt 1945",    draw:drawUlama},
+];
+
+const ENEMY_SKINS=[
+  {id:"voc",        name:"Tentara VOC",   lore:"Penjajah Belanda abad ke-17",      draw:drawEnemyVOC},
+  {id:"kompeni",    name:"Si Kompeni",    lore:"Prajurit kolonial Hindia Belanda", draw:drawEnemyKompeni},
+  {id:"koruptor",   name:"Si Koruptor",   lore:"Musuh Pancasila & keadilan",       draw:drawEnemyKoruptor},
+  {id:"provokator", name:"Provokator",    lore:"Penghasut persatuan bangsa",       draw:drawEnemyProvokator},
+];
+
+/* ── DIPONEGORO ────────────────────────────────────────────*/
+function drawDiponegoro(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  const b=frame%2===0?-1.5:1.5;ctx.translate(0,b);
+  shade(ctx,0,19);
+  ctx.fillStyle="#f5f0e8";
+  ctx.beginPath();ctx.moveTo(-13,4);ctx.lineTo(-11,20);ctx.lineTo(11,20);ctx.lineTo(13,4);ctx.quadraticCurveTo(0,-2,-13,4);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#1a6b3a";ctx.fillRect(-11,6,22,4);
+  ctx.save();ctx.translate(14,0);ctx.rotate(0.3);
+  ctx.fillStyle="#aaa";ctx.fillRect(-1,-14,2,10);
+  ctx.fillStyle="#c8900f";ctx.fillRect(-3,-5,6,4);ctx.restore();
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#7c2d12";ctx.beginPath();ctx.ellipse(0,-19,10,6,0,0,Math.PI);ctx.fill();
+  ctx.fillStyle="#92400e";ctx.beginPath();ctx.arc(0,-19,7,Math.PI,0);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.fillRect(-9,-19,18,3);
+  ctx.fillStyle="#333";ctx.fillRect(-7,-7,6,1.5);ctx.fillRect(1,-7,6,1.5);
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ── SOEKARNO ─────────────────────────────────────────────*/
+function drawSoekarno(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  ctx.fillStyle="#f0ece0";ctx.beginPath();ctx.roundRect(-13,2,26,18,3);ctx.fill();
+  ctx.fillStyle="#c0392b";
+  ctx.beginPath();ctx.moveTo(-2,-1);ctx.lineTo(2,-1);ctx.lineTo(3,10);ctx.lineTo(0,14);ctx.lineTo(-3,10);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#111";ctx.beginPath();ctx.ellipse(0,-19,9,5,0,0,Math.PI);ctx.fill();ctx.fillRect(-9,-19,18,4);
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  if(dir!=="up"){ctx.strokeStyle="#333";ctx.lineWidth=1.5;ctx.lineCap="round";ctx.beginPath();ctx.arc(0,-6,3,0.2,Math.PI-0.2);ctx.stroke();}
+  ctx.restore();
+}
+
+/* ── KARTINI ───────────────────────────────────────────────*/
+function drawKartini(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  ctx.fillStyle="#1e40af";ctx.beginPath();ctx.roundRect(-11,1,22,20,4);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.font="bold 6px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("✦",0,13);
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(0,-13,11,Math.PI,0);ctx.fill();
+  ctx.beginPath();ctx.ellipse(8,-18,5,4,0.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#e74c3c";ctx.beginPath();ctx.arc(8,-18,3,0,Math.PI*2);ctx.fill();
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ── HATTA ─────────────────────────────────────────────────*/
+function drawHatta(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  ctx.fillStyle="#1e293b";ctx.beginPath();ctx.roundRect(-13,2,26,18,3);ctx.fill();
+  ctx.fillStyle="#334155";ctx.fillRect(-13,2,10,18);
+  ctx.fillStyle="#92400e";ctx.fillRect(11,6,6,10);
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#111";ctx.beginPath();ctx.ellipse(0,-19,9,5,0,0,Math.PI);ctx.fill();ctx.fillRect(-9,-19,18,4);
+  ctx.strokeStyle="#666";ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(-4,-10,3,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.arc(4,-10,3,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-1,-10);ctx.lineTo(1,-10);ctx.stroke();
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-4,ey,1.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(4,ey,1.5,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ── GAJAH MADA ────────────────────────────────────────────*/
+function drawGajahMada(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19,13,5);
+  ctx.fillStyle="#92400e";ctx.beginPath();ctx.roundRect(-14,0,28,20,2);ctx.fill();
+  ctx.fillStyle="#d4a017";for(let i=-10;i<=10;i+=5)ctx.fillRect(i,2,3,16);
+  ctx.fillStyle="#d4a017";ctx.beginPath();ctx.roundRect(-14,-2,28,6,2);ctx.fill();
+  ctx.fillStyle="#7a7a7a";ctx.fillRect(15,-18,2,30);
+  ctx.fillStyle="#c8c8c8";ctx.beginPath();ctx.moveTo(14,-22);ctx.lineTo(18,-22);ctx.lineTo(16,-10);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#b07840";ctx.beginPath();ctx.arc(0,-10,12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.fillRect(-11,-20,22,5);
+  ctx.fillStyle="#c0392b";for(let x=-8;x<=8;x+=5){ctx.beginPath();ctx.arc(x,-21,3,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.ellipse(0,-6,8,2,0,0,Math.PI);ctx.fill();
+  const ey=dir==="up"?-15:-10;
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(-4,ey,2.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(4,ey,2.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(-3,ey-.5,1,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(5,ey-.5,1,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ── SANTRI ────────────────────────────────────────────────*/
+function drawSantri(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  ctx.fillStyle="#f5f0e8";ctx.beginPath();ctx.roundRect(-12,1,24,19,3);ctx.fill();
+  ctx.fillStyle="#1a6b3a";ctx.fillRect(-12,12,24,8);
+  ctx.fillStyle="#145a30";for(let i=0;i<5;i++)ctx.fillRect(-12+i*6,12,3,8);
+  ctx.fillStyle="#1a6b3a";ctx.beginPath();ctx.roundRect(11,4,6,8,1);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.font="4px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("☪",14,9);
+  ctx.fillStyle="#d4a87a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#f5f0e8";ctx.beginPath();ctx.ellipse(0,-18,9,5,0,0,Math.PI);ctx.fill();ctx.fillRect(-9,-18,18,3);
+  ctx.strokeStyle="#ddd";ctx.lineWidth=0.7;ctx.strokeRect(-9,-18,18,3);
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  if(dir!=="up"){ctx.strokeStyle="#333";ctx.lineWidth=1.5;ctx.lineCap="round";ctx.beginPath();ctx.arc(0,-6,3,0.2,Math.PI-0.2);ctx.stroke();}
+  ctx.restore();
+}
+
+/* ── SUDIRMAN (BARU) ───────────────────────────────────────*/
+function drawSudirman(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  // seragam tentara hijau
+  ctx.fillStyle="#3a5a2a";ctx.beginPath();ctx.roundRect(-13,2,26,18,3);ctx.fill();
+  // bintang pangkat
+  ctx.fillStyle="#d4a017";
+  ctx.font="7px serif";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText("★",-6,6);ctx.fillText("★",0,6);ctx.fillText("★",6,6);
+  // sabuk
+  ctx.fillStyle="#5c3310";ctx.fillRect(-13,12,26,3);
+  ctx.fillStyle="#d4a017";ctx.fillRect(-2,11,4,5);
+  // kepala
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  // baret TNI
+  ctx.fillStyle="#3a5a2a";
+  ctx.beginPath();ctx.ellipse(0,-18,10,5,0,0,Math.PI);ctx.fill();
+  ctx.fillRect(-10,-18,20,4);
+  ctx.fillStyle="#d4a017";ctx.fillRect(-3,-20,6,3);
+  // mata & kumis
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#333";ctx.fillRect(-5,-7,4,1.5);ctx.fillRect(1,-7,4,1.5);
+  ctx.restore();
+}
+
+/* ── PATTIMURA (BARU) ──────────────────────────────────────*/
+function drawPattimura(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19,13,5);
+  // baju merah khas Maluku
+  ctx.fillStyle="#8b1a1a";ctx.beginPath();ctx.roundRect(-13,2,26,18,3);ctx.fill();
+  // aksen emas
+  ctx.fillStyle="#d4a017";ctx.fillRect(-13,2,26,3);
+  for(let i=-9;i<=9;i+=6){ctx.beginPath();ctx.arc(i,10,2,0,Math.PI*2);ctx.fill();}
+  // tombak
+  ctx.fillStyle="#8a7060";ctx.fillRect(14,-16,2,28);
+  ctx.fillStyle="#c0c0c0";ctx.beginPath();ctx.moveTo(13,-20);ctx.lineTo(17,-20);ctx.lineTo(15,-10);ctx.closePath();ctx.fill();
+  // kepala (gelap Maluku)
+  ctx.fillStyle="#8a5a30";ctx.beginPath();ctx.arc(0,-10,12,0,Math.PI*2);ctx.fill();
+  // rambut keriting
+  ctx.fillStyle="#1a0a00";
+  for(let a=0;a<Math.PI;a+=0.4){
+    ctx.beginPath();ctx.arc(Math.cos(a)*10,Math.sin(a)*6-18,3,0,Math.PI*2);ctx.fill();
+  }
+  // ikat kepala merah
+  ctx.fillStyle="#c0392b";ctx.fillRect(-12,-14,24,4);
+  ctx.fillStyle="#d4a017";ctx.fillRect(-2,-16,4,8);
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#111";ctx.beginPath();ctx.arc(-3,ey,2.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(-2.3,ey-.5,1,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3.7,ey-.5,1,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ── ULAMA PEJUANG (BARU) ──────────────────────────────────*/
+function drawUlama(ctx,cx,cy,sz,frame,dir,inv){
+  if(inv)return;
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-1.5:1.5);
+  shade(ctx,0,19);
+  // jubah hitam ulama
+  ctx.fillStyle="#1a1a1a";ctx.beginPath();ctx.roundRect(-13,1,26,19,3);ctx.fill();
+  // sorban/surban putih di badan
+  ctx.fillStyle="#f0ece0";ctx.fillRect(-11,1,22,6);
+  ctx.fillStyle="#d4a017";ctx.fillRect(-11,6,22,2);
+  // tasbih
+  ctx.strokeStyle="#d4a017";ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(-12,10,5,0,Math.PI*1.5);ctx.stroke();
+  ctx.fillStyle="#d4a017";ctx.beginPath();ctx.arc(-12,5,1.5,0,Math.PI*2);ctx.fill();
+  // kepala
+  ctx.fillStyle="#c8a07a";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  // sorban putih besar di kepala
+  ctx.fillStyle="#f0ece0";
+  ctx.beginPath();ctx.arc(0,-16,10,Math.PI,0);ctx.fill();
+  ctx.fillRect(-10,-16,20,5);
+  // lilitan sorban
+  ctx.strokeStyle="#d4a017";ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.ellipse(0,-15,10,4,0,0,Math.PI*2);ctx.stroke();
+  // janggut
+  ctx.fillStyle="#555";
+  ctx.beginPath();ctx.moveTo(-4,-3);ctx.lineTo(-5,4);ctx.lineTo(0,6);ctx.lineTo(5,4);ctx.lineTo(4,-3);ctx.closePath();ctx.fill();
+  const ey=dir==="up"?-15:-11;
+  ctx.fillStyle="#222";ctx.beginPath();ctx.arc(-3,ey,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,ey,2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════
+   ENEMY SKINS  (4 total)
+══════════════════════════════════════════════════════════ */
+function drawEnemyVOC(ctx,cx,cy,sz,frame){
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-2:2);
+  shade(ctx,0,19);
+  ctx.fillStyle="#7f1d1d";ctx.beginPath();ctx.roundRect(-12,0,24,18,2);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.font="bold 6px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("VOC",0,11);
+  ctx.fillStyle="#1a1a1a";
+  ctx.beginPath();ctx.moveTo(-15,-16);ctx.lineTo(15,-16);ctx.lineTo(10,-8);ctx.lineTo(-10,-8);ctx.closePath();ctx.fill();
+  ctx.strokeStyle="#d4a017";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-15,-16);ctx.lineTo(15,-16);ctx.stroke();
+  ctx.fillStyle="#e8c49a";ctx.beginPath();ctx.arc(0,-8,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(-3,-10,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,-10,2,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle="#1a0a00";ctx.lineWidth=2;ctx.lineCap="round";
+  ctx.beginPath();ctx.moveTo(-6,-13);ctx.lineTo(-1,-11);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(6,-13);ctx.lineTo(1,-11);ctx.stroke();
+  ctx.beginPath();ctx.arc(0,-4,4,0.3,Math.PI-0.3,true);ctx.stroke();
+  ctx.restore();
+}
+
+function drawEnemyKompeni(ctx,cx,cy,sz,frame){
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-2:2);
+  shade(ctx,0,19);
+  ctx.fillStyle="#1e3a5f";ctx.beginPath();ctx.roundRect(-12,0,24,18,2);ctx.fill();
+  ctx.fillStyle="#d4a017";for(let i=-8;i<=8;i+=8){ctx.beginPath();ctx.arc(i,6,2,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle="#c8c8c8";ctx.fillRect(11,2,2,14);
+  ctx.fillStyle="#888";ctx.beginPath();ctx.moveTo(10,-2);ctx.lineTo(14,-2);ctx.lineTo(13,4);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#e8c49a";ctx.beginPath();ctx.arc(0,-8,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#c8c8c8";ctx.beginPath();ctx.arc(0,-14,10,Math.PI,0);ctx.fill();ctx.fillRect(-10,-14,20,5);
+  ctx.fillStyle="#aaa";ctx.fillRect(-12,-11,24,2);
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(-3,-9,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,-9,2,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle="#1a0a00";ctx.lineWidth=1.8;ctx.lineCap="round";
+  ctx.beginPath();ctx.moveTo(-5,-12);ctx.lineTo(-1,-10);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(5,-12);ctx.lineTo(1,-10);ctx.stroke();
+  ctx.beginPath();ctx.arc(0,-3,4,0.3,Math.PI-0.3,true);ctx.stroke();
+  ctx.restore();
+}
+
+function drawEnemyKoruptor(ctx,cx,cy,sz,frame){
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  ctx.translate(0,frame%2===0?-2:2);
+  shade(ctx,0,19,13,5);
+  ctx.fillStyle="#374151";ctx.beginPath();ctx.ellipse(0,10,14,12,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#1e293b";ctx.beginPath();ctx.roundRect(-13,0,26,16,3);ctx.fill();
+  ctx.fillStyle="#d4a017";ctx.beginPath();ctx.moveTo(-2,0);ctx.lineTo(2,0);ctx.lineTo(3,12);ctx.lineTo(0,16);ctx.lineTo(-3,12);ctx.closePath();ctx.fill();
+  ctx.font="8px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("💰",0,9);
+  ctx.fillStyle="#d4a87a";ctx.beginPath();ctx.arc(0,-8,12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.ellipse(0,-16,10,5,0,0,Math.PI);ctx.fill();
+  ctx.fillStyle="#333";ctx.fillRect(-6,-4,5,1.5);ctx.fillRect(1,-4,5,1.5);
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(-4,-9,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(4,-9,2,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle="#1a0a00";ctx.lineWidth=2;ctx.lineCap="round";ctx.beginPath();ctx.arc(0,-2,4,0.3,Math.PI-0.3,true);ctx.stroke();
+  ctx.restore();
+}
+
+function drawEnemyProvokator(ctx,cx,cy,sz,frame){
+  const s=sz/40;ctx.save();ctx.translate(cx,cy);ctx.scale(s,s);
+  const wobble=Math.sin(Date.now()/200)*2.5;ctx.translate(0,wobble);
+  shade(ctx,0,19);
+  ctx.fillStyle="#1a1a1a";ctx.beginPath();ctx.roundRect(-12,0,24,18,3);ctx.fill();
+  ctx.fillStyle="#ef4444";ctx.font="7px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("⚠",0,11);
+  ctx.fillStyle="#1a0a00";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  for(let a=-80;a<=80;a+=25){
+    const r=a*Math.PI/180;
+    ctx.fillStyle="#1a0a00";ctx.beginPath();
+    ctx.moveTo(Math.cos(r-0.15)*11,Math.sin(r-0.15)*11-30);
+    ctx.lineTo(Math.cos(r)*17,Math.sin(r)*17-30);
+    ctx.lineTo(Math.cos(r+0.15)*11,Math.sin(r+0.15)*11-30);
+    ctx.closePath();ctx.fill();
+  }
+  ctx.fillStyle="#c09060";ctx.beginPath();ctx.arc(0,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#ef4444";ctx.beginPath();ctx.arc(-3,-12,2.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,-12,2.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#800";ctx.beginPath();ctx.arc(-3,-12,1.2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(3,-12,1.2,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#333";ctx.beginPath();ctx.arc(0,-6,5,0.1,Math.PI-0.1);ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="5px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("!",0,-4);
+  ctx.restore();
+}
+
+</script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   BOMSKUY — game.js
+   Perjuangan Kemerdekaan Indonesia
+   ═══════════════════════════════════════════════════════════ */
+"use strict";
+
+/* ══════════════════════════════════════════════════════════
+   STORY CONTENT
+══════════════════════════════════════════════════════════ */
+const INTRO_PAGES = [
+  `<span class="pt">🌴 Nusantara Sebelum Penjajahan</span>
+Nusantara, kepulauan yang kaya dengan rempah-rempah seperti <em>cengkeh, pala, lada, dan kayu manis</em>, telah menjadi pusat perdagangan dunia selama berabad-abad. Kerajaan-kerajaan besar seperti <em>Majapahit, Sriwijaya, dan Mataram</em> memerintah dengan kemakmuran dan kedaulatan penuh.<br/><br/>
+Rakyat hidup makmur. Para pedagang dari Arab, India, dan Tiongkok datang berdagang dengan damai. Laut Nusantara adalah jalur emas peradaban dunia.`,
+
+  `<span class="pt">⚔️ Kedatangan Penjajah Belanda</span>
+<span class="py">1602</span>Belanda mendirikan <em>VOC (Vereenigde Oost-Indische Compagnie)</em> — kongsi dagang terkuat di dunia. Mereka datang bukan sekadar berdagang, melainkan dengan ambisi <em>menguasai dan memonopoli</em> seluruh perdagangan rempah Nusantara.<br/><br/>
+Dengan senjata dan tipu daya, VOC mulai menaklukkan satu per satu kerajaan di Nusantara. Rakyat dipaksa menyerahkan hasil bumi dengan harga yang ditentukan sepihak oleh penjajah.`,
+
+  `<span class="pt">😢 Penderitaan di Bawah Penjajahan</span>
+<span class="py">1830</span>Di bawah <em>Sistem Tanam Paksa (Cultuurstelsel)</em> yang diterapkan Gubernur Jenderal Van den Bosch, rakyat Indonesia dipaksa menanam tanaman ekspor untuk Belanda. Petani yang menolak dihukum berat.<br/><br/>
+<span class="pq">"Rakyat mati kelaparan di tanah yang subur, sementara hasil buminya dikirim ke negeri orang."</span>
+Selama lebih dari <em>350 tahun</em>, Nusantara berada di bawah kekuasaan bangsa asing yang merampas kemerdekaan dan kekayaan alam bangsa ini.`,
+
+  `<span class="pt">🔥 Bangkitnya Para Pahlawan</span>
+Rakyat Indonesia tidak tinggal diam. Para pahlawan bangkit melawan penjajah:<br/><br/>
+🗡️ <em>Pangeran Diponegoro</em> memimpin Perang Jawa (1825–1830)<br/>
+🏝️ <em>Kapitan Pattimura</em> berjuang di Maluku (1817)<br/>
+✍️ <em>R.A. Kartini</em> berjuang lewat pena demi pendidikan<br/>
+📿 <em>Para Ulama</em> mengeluarkan Resolusi Jihad (1945)<br/><br/>
+Semangat perlawanan mengalir deras. <em>Kemerdekaan adalah hak segala bangsa!</em>`,
+
+  `<span class="pt">⚔️ MISIMU SEBAGAI PAHLAWAN!</span>
+Kini giliran <em>kamu</em> berjuang! Medan perang menantimu:<br/><br/>
+🌶️ <em>Kumpulkan semua Rempah</em> yang berserakan di medan tempur<br/>
+💣 <em>Kalahkan semua Penjajah</em> menggunakan bom strategimu<br/>
+🏴 <em>Capai Bendera Merah Putih</em> di tengah medan untuk merdeka!<br/><br/>
+<span class="pq">"Lebih baik mati berkalang tanah daripada hidup bercermin bangkai." — Ir. Soekarno</span>
+Selamat berjuang, Pahlawan Indonesia! 🇮🇩`,
+];
+
+const ENDING_PAGES = [
+  `<span class="pt">🌅 Fajar Kemerdekaan</span>
+<span class="py">17 Agustus 1945</span>Setelah ratusan tahun berjuang, fajar kemerdekaan menyingsing di Nusantara. Pada pagi bersejarah itu, di Jalan Pegangsaan Timur No. 56, Jakarta, <em>Ir. Soekarno</em> bersama <em>Drs. Mohammad Hatta</em> membacakan teks Proklamasi Kemerdekaan Indonesia.<br/><br/>
+<span class="pq">"Kami bangsa Indonesia dengan ini menyatakan Kemerdekaan Indonesia."</span>
+Tangis haru dan teriakan <em>"MERDEKA!"</em> bergema ke seluruh penjuru Nusantara.`,
+
+  `<span class="pt">🏴 Bendera Merah Putih Berkibar</span>
+Bendera <em>Merah Putih</em> — merah melambangkan keberanian, putih melambangkan kesucian — dikibarkan untuk pertama kalinya sebagai simbol bangsa merdeka dan berdaulat.<br/><br/>
+Para pemuda, pejuang, santri, dan seluruh rakyat bersatu dalam kegembiraan tak terhingga. Tiga setengah abad penjajahan berakhir berkat tekad bulat seluruh bangsa.<br/><br/>
+<em>Persatuan dan kesatuan</em> adalah kunci kemenangan. Pancasila dan Bhinneka Tunggal Ika menjadi fondasi bangsa baru.`,
+
+  `<span class="pt">⚖️ Nilai-Nilai yang Diwariskan</span>
+Para pahlawan mewariskan lebih dari sekadar kemerdekaan:<br/><br/>
+🕊️ <em>Pancasila</em> — dasar negara yang menyatukan keberagaman<br/>
+📜 <em>UUD 1945</em> — konstitusi pelindung hak setiap warga<br/>
+☪️ <em>Islam Rahmatan lil 'Alamin</em> — rahmat bagi seluruh alam<br/>
+🤝 <em>Gotong Royong</em> — semangat kebersamaan sejati<br/><br/>
+<span class="pq">"Bangsa yang besar adalah bangsa yang menghargai jasa para pahlawannya." — Ir. Soekarno</span>`,
+
+  `<span class="pt">🌟 Tugasmu Sebagai Generasi Penerus</span>
+Perjuangan belum selesai. Kini medan perang adalah <em>ilmu pengetahuan, teknologi, dan integritas</em>.<br/><br/>
+Sebagai generasi penerus bangsa:<br/>
+📚 Belajar sungguh-sungguh dan meraih prestasi<br/>
+🇮🇩 Cinta tanah air dan bangga menjadi Indonesia<br/>
+⚖️ Menjunjung keadilan dan nilai-nilai Pancasila<br/>
+🤝 Menjaga persatuan di tengah keberagaman<br/><br/>
+<em>Indonesia Merdeka! Indonesia Jaya! 🇮🇩 MERDEKA!</em>`,
+];
+
+/* ══════════════════════════════════════════════════════════
+   ENCYCLOPEDIA DATA
+══════════════════════════════════════════════════════════ */
+const ENCYC = {
+  walls:[
+    { icon:"🟫", name:"Tembok Batik",     type:"Tembok Bata Biasa",  desc:"Tembok bermotif batik kawung khas Jawa. Dapat dihancurkan dengan 1 bom. Kadang menyimpan power-up di dalamnya.", tip:"💡 Hancurkan untuk mencari power-up tersembunyi!" },
+    { icon:"🪨", name:"Batu Borobudur",    type:"Tembok Bata Biasa",  desc:"Disusun seperti batu candi Borobudur di Magelang, Jawa Tengah. Candi Buddha terbesar di dunia, dibangun abad ke-8 oleh Dinasti Syailendra.", tip:"💡 1 bom = hancur. Bisa menyimpan rempah!" },
+    { icon:"🪵", name:"Kayu Ukir",         type:"Tembok Bata Biasa",  desc:"Panel kayu berukir motif wayang Jawa. Seni ukir kayu adalah warisan budaya Indonesia yang telah diakui UNESCO.", tip:"💡 Mudah dihancurkan, sering ada item di baliknya." },
+    { icon:"💚", name:"Kaligrafi Islami",  type:"Tembok Bata Biasa",  desc:"Tembok hijau dengan ornamen kaligrafi ☪ dan border emas. Mencerminkan nilai-nilai Islam yang menjadi bagian penting budaya Nusantara.", tip:"💡 Hancurkan dengan 1 bom seperti bata biasa." },
+    { icon:"🔒", name:"Granit Keras",      type:"Tembok KERAS (2 Bom!)", desc:"Tembok granit berlapis dengan lambang gembok emas. Ini adalah tembok terkuat — butuh 2 kali bom untuk menghancurkannya! Bom pertama akan membuatnya retak.", tip:"⚠️ Perlu 2 bom! Jangan habiskan bom di sini jika banyak musuh." },
+    { icon:"🏛️", name:"Tembok Candi",      type:"Tembok Solid (Tak Bisa Dihancurkan)", desc:"Terbuat dari batu andesit hitam seperti tembok candi di Nusantara. Tidak bisa dihancurkan dengan bom. Gunakan sebagai pelindung dari musuh!", tip:"🛡️ Bersembunyi di balik tembok ini saat musuh mengejar!" },
+  ],
+  powerups:[
+    { icon:"⚡", name:"Semangat Diponegoro", type:"Power-Up Kecepatan",  desc:"Terinspirasi dari semangat juang Pangeran Diponegoro yang bergerak cepat dalam Perang Jawa. Memberikan boost kecepatan berlari ×2 selama 3 detik penuh!", tip:"💡 Gunakan saat dikelilingi musuh untuk kabur!" },
+    { icon:"💣", name:"Senjata Kemerdekaan", type:"Power-Up Bom Ekstra", desc:"Mewakili persenjataan para pejuang kemerdekaan Indonesia. Menambah jumlah bom maksimal yang bisa kamu taruh sekaligus sebanyak +1.", tip:"💡 Makin banyak bom = makin banyak musuh bisa dikepung!" },
+    { icon:"💥", name:"Serangan Gajah Mada", type:"Power-Up Radius Ledak", desc:"Terinspirasi kekuatan Gajah Mada, Mahapatih Majapahit yang berambisi menyatukan Nusantara. Memperluas radius ledakan bom kamu sebesar +1 tile.", tip:"💡 Prioritaskan ini untuk membersihkan musuh dari jarak jauh!" },
+    { icon:"❄️", name:"Doa Santri",           type:"Power-Up Freeze",     desc:"Terinspirasi dari kekuatan doa para santri dalam Resolusi Jihad 22 Oktober 1945. Membekukan SEMUA musuh selama 2,5 detik. Manfaatkan sebaik mungkin!", tip:"💡 Ambil ini lalu segera letakkan bom dekat musuh yang beku!" },
+  ],
+  spices:[
+    { icon:"🌶️", name:"Cengkeh",    type:"Rempah Nusantara", desc:"Cengkeh dari Maluku adalah salah satu rempah paling berharga yang menjadi alasan utama Belanda menjajah Nusantara. Nilainya lebih mahal dari emas di Eropa abad ke-17!", tip:"🌶️ +30 poin! Kumpulkan semua untuk memenuhi syarat menang." },
+    { icon:"🌿", name:"Pala",        type:"Rempah Nusantara", desc:"Biji pala dari Kepulauan Banda, Maluku. VOC pernah melakukan pembantaian Banda (1621) untuk memonopoli perdagangan pala. Tragedi terbesar dalam sejarah kolonialisme.", tip:"🌶️ +30 poin! Setiap rempah wajib dikumpulkan." },
+    { icon:"🧄", name:"Lada Hitam",  type:"Rempah Nusantara", desc:"Lada hitam dari Sumatera dan Kalimantan. Rempah ini menjadi komoditas utama perdagangan dunia abad pertengahan dan mendorong bangsa Eropa mencari jalur ke Asia.", tip:"🌶️ +30 poin! Hati-hati musuh yang menjaga rempah." },
+    { icon:"🫚", name:"Minyak Kayu", type:"Rempah Nusantara", desc:"Minyak dari berbagai kayu aromatik Nusantara. Digunakan dalam pengobatan tradisional dan parfum mewah di Eropa. Salah satu kekayaan alam yang membuat Belanda tergiur.", tip:"🌶️ +30 poin! Jangan lupa ambil sebelum ke bendera!" },
+    { icon:"🪵", name:"Kayu Manis",  type:"Rempah Nusantara", desc:"Kayu manis dari Sri Lanka dan Nusantara. Bersama cengkeh dan pala, kayu manis menjadi 'tritunggal rempah' yang mengubah sejarah dunia dan memicu era penjajahan.", tip:"🌶️ +30 poin! Kumpulkan semua rempah = syarat kemenangan!" },
+  ],
+  enemies:[
+    { icon:"🔴", name:"Tentara VOC",    type:"Penjajah Sejarah",  desc:"VOC (Vereenigde Oost-Indische Compagnie) didirikan 1602. Merupakan perusahaan multinasional pertama di dunia dengan modal terbesar. Mereka menjajah Nusantara selama 200 tahun.", tip:"⚠️ Bergerak lambat tapi terus mengejar. Jebak dengan bom!" },
+    { icon:"🔵", name:"Si Kompeni",     type:"Penjajah Sejarah",  desc:"Tentara reguler Hindia Belanda (KNIL). Memakai seragam biru dan helm baja. Mereka yang menjalankan kekejaman tanam paksa dan mengumpulkan pajak dari rakyat miskin.", tip:"⚠️ Kadang mengejar agresif. Gunakan tembok sebagai rintangan!" },
+    { icon:"💛", name:"Si Koruptor",    type:"Musuh PKN",         desc:"Representasi musuh dalam negeri — koruptor yang mengkhianati rakyat. Dalam PKN, korupsi adalah pelanggaran sila ke-5 Pancasila: 'Keadilan sosial bagi seluruh rakyat Indonesia'.", tip:"⚠️ Bergerak tidak terduga karena sifatnya yang licik!" },
+    { icon:"🟠", name:"Provokator",     type:"Musuh PKN",         desc:"Penghasut yang merusak persatuan bangsa. Bertentangan dengan sila ke-3 Pancasila: 'Persatuan Indonesia'. Di era digital, provokator menyebar hoaks dan ujaran kebencian.", tip:"⚠️ Bergerak gelisah dan tidak beraturan — paling susah diprediksi!" },
+  ],
+  heroes:[
+    { icon:"🗡️", name:"Pangeran Diponegoro", type:"Pahlawan Nasional", desc:"(1785–1855) Memimpin Perang Jawa 1825–1830, perang terbesar melawan Belanda di Jawa. Perang ini menelan 200.000 korban jiwa dan menguras kas Belanda.", tip:"⭐ Skin: Jubah putih, blangkon, keris di pinggang." },
+    { icon:"🎩", name:"Ir. Soekarno",          type:"Proklamator RI",   desc:"(1901–1970) Proklamator kemerdekaan dan Presiden pertama Republik Indonesia. Bersama Hatta membacakan proklamasi 17 Agustus 1945. Bapak Bangsa Indonesia.", tip:"⭐ Skin: Jas putih, peci hitam, dasi merah." },
+    { icon:"✍️", name:"R.A. Kartini",          type:"Pahlawan Nasional", desc:"(1879–1904) Pahlawan emansipasi wanita dari Jepara. Lewat surat-suratnya kepada sahabat di Belanda, ia memperjuangkan hak pendidikan wanita pribumi.", tip:"⭐ Skin: Kebaya biru, sanggul dengan bunga merah." },
+    { icon:"📚", name:"Mohammad Hatta",         type:"Proklamator RI",   desc:"(1902–1980) Proklamator dan Wakil Presiden pertama RI. Dikenal sebagai Bung Hatta, ekonom, dan tokoh koperasi Indonesia. Memakai kacamata tebal dan buku di saku.", tip:"⭐ Skin: Jas gelap, kacamata, buku di tangan." },
+    { icon:"⚔️", name:"Gajah Mada",            type:"Pahlawan Klasik",  desc:"(~1290–1364) Mahapatih Majapahit yang bersumpah tidak makan buah palapa sebelum menyatukan Nusantara. Sumpah Palapa menjadi inspirasi wawasan nusantara modern.", tip:"⭐ Skin: Zirah emas, mahkota Majapahit, tombak panjang." },
+    { icon:"📿", name:"Santri Pejuang",         type:"Pejuang Islam",    desc:"Representasi para santri pesantren yang berjuang merebut kemerdekaan. Pada 22 Oktober 1945, KH. Hasyim Asy'ari mengeluarkan Resolusi Jihad yang menggerakkan umat Islam.", tip:"⭐ Skin: Koko putih, sarung hijau, Al-Quran di tangan." },
+    { icon:"🎖️", name:"Jend. Sudirman",        type:"Pahlawan Militer",  desc:"(1916–1950) Panglima Besar TNI pertama RI. Meskipun sakit paru-paru, memimpin Perang Gerilya melawan Belanda 1948–1949. Lambang keteguhan dan pengorbanan.", tip:"⭐ Skin: Seragam hijau TNI, baret, bintang tiga." },
+    { icon:"🏝️", name:"Kapitan Pattimura",     type:"Pahlawan Nasional", desc:"(1783–1817) Pahlawan dari Maluku. Nama asli Thomas Matulessy. Memimpin perlawanan rakyat Maluku melawan VOC pada 1817. Wajahnya terpampang di uang kertas Rp 1.000.", tip:"⭐ Skin: Baju merah Maluku, ikat kepala, tombak." },
+    { icon:"🌙", name:"Ulama Pejuang",          type:"Pejuang Islam",    desc:"Representasi ulama-ulama besar pejuang kemerdekaan. KH. Hasyim Asy'ari (pendiri NU), KH. Ahmad Dahlan (pendiri Muhammadiyah), dan ribuan ulama lain yang berjuang dengan ilmu dan doa.", tip:"⭐ Skin: Sorban putih, jubah hitam, tasbih emas." },
+  ],
+  history:[
+    { icon:"📅", name:"1602 — VOC Berdiri",       type:"Sejarah Kolonial", desc:"VOC (Vereenigde Oost-Indische Compagnie) didirikan di Belanda. Modal awal 6,4 juta gulden. Mendapat hak monopoli perdagangan Asia, membentuk angkatan bersenjata sendiri, dan mencetak uang.", tip:"" },
+    { icon:"📅", name:"1619 — Batavia Didirikan",  type:"Sejarah Kolonial", desc:"Jan Pieterszoon Coen mendirikan Batavia (Jakarta) sebagai pusat kekuasaan VOC di Asia. Nama Batavia diambil dari suku Batavieren di Belanda.", tip:"" },
+    { icon:"📅", name:"1825 — Perang Jawa",        type:"Perlawanan Rakyat", desc:"Pangeran Diponegoro memimpin Perang Jawa (1825–1830), perang paling mematikan dalam sejarah kolonial Belanda di Indonesia. 200.000 jiwa melayang.", tip:"" },
+    { icon:"📅", name:"1830 — Tanam Paksa",        type:"Sejarah Kolonial", desc:"Gubernur Van den Bosch menerapkan Cultuurstelsel (Tanam Paksa). Rakyat wajib menyerahkan 1/5 tanah untuk tanaman ekspor atau kerja paksa 66 hari/tahun.", tip:"" },
+    { icon:"📅", name:"1908 — Kebangkitan Nasional", type:"Perlawanan Rakyat", desc:"Budi Utomo didirikan 20 Mei 1908 oleh Dr. Wahidin Sudirohusodo dan mahasiswa STOVIA. Menjadi tonggak awal kebangkitan nasional Indonesia.", tip:"" },
+    { icon:"📅", name:"1928 — Sumpah Pemuda",      type:"Perlawanan Rakyat", desc:"28 Oktober 1928: Para pemuda bersumpah bertanah air satu, berbangsa satu, berbahasa satu — Indonesia. Momen persatuan terpenting sebelum kemerdekaan.", tip:"" },
+    { icon:"📅", name:"1945 — Resolusi Jihad",     type:"Perjuangan Islam", desc:"22 Oktober 1945: KH. Hasyim Asy'ari mengeluarkan Resolusi Jihad, mewajibkan umat Islam berjihad mempertahankan kemerdekaan. Menggerakkan ribuan santri ke medan perang.", tip:"" },
+    { icon:"📅", name:"1945 — Proklamasi",         type:"Kemerdekaan",      desc:"17 Agustus 1945, pukul 10.00 WIB: Soekarno-Hatta membacakan teks Proklamasi Kemerdekaan Indonesia. Teks diketik Sayuti Melik setelah melalui perdebatan panjang malam sebelumnya.", tip:"" },
+  ],
+};
+
+/* ══════════════════════════════════════════════════════════
+   GAME CONFIG
+══════════════════════════════════════════════════════════ */
+const DIFF = {
+  easy:    { cols:15, rows:9,  enemies:4, eSpeed:820, bTimer:2600, bMax:2, bDen:0.27, label:"MUDAH"   },
+  medium:  { cols:15, rows:11, enemies:5, eSpeed:720, bTimer:2600, bMax:2, bDen:0.31, label:"SEDANG"  },
+  hard:    { cols:17, rows:13, enemies:7, eSpeed:560, bTimer:3000, bMax:2, bDen:0.35, label:"SULIT"   },
+  extreme: { cols:19, rows:15, enemies:9, eSpeed:440, bTimer:4000, bMax:2, bDen:0.39, label:"EXTREME" },
+};
+
+const CELL = 40;
+const T = { FLOOR:0, SOLID:1, BRICK:2, HARD:3 };
+
+const PU_LIST = [
+  { id:"speed",  label:"⚡ Semangat Diponegoro", desc:"Kecepatan ×2 selama 3 detik!" },
+  { id:"bombup", label:"💣 Senjata Kemerdekaan", desc:"Maks Bom +1" },
+  { id:"radius", label:"💥 Serangan Gajah Mada", desc:"Radius Ledakan +1" },
+  { id:"freeze", label:"❄️ Doa Santri",           desc:"Musuh Membeku 2.5 detik!" },
+];
+
+const SPICES = ["🌶️","🌿","🧄","🫚","🪵"];
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+let G = {};
+
+function newState(diff, name, pSkin, eSkin) {
+  const cfg = { ...DIFF[diff] };
+  return {
+    running:false, paused:false,
+    diff, name, pSkin, eSkin, cfg,
+    grid:[], bvars:[], hardHits:{},
+    items:[], spices:[], spTotal:0, spCount:0,
+    flagPos:null,
+    player:{
+      x:1,y:1,lives:3,score:0,kills:0,
+      maxBombs:cfg.bMax,activeBombs:0,
+      radius:2,speedBoost:false,speedTimer:0,
+      inv:false,invTimer:0,
+      moving:false,dir:"down",anim:0,animT:0
+    },
+    enemies:[], bombs:[], explosions:[],
+    elapsed:0, raf:null, lastTime:0,
+    keys:{},
+    /* input accumulation for mobile */
+    mobileKeys:{},
+  };
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAP GENERATION
+══════════════════════════════════════════════════════════ */
+function buildMap() {
+  const { cols, rows, bDen } = G.cfg;
+  G.grid=[]; G.bvars=[]; G.hardHits={};
+
+  for(let r=0;r<rows;r++){
+    G.grid[r]=[]; G.bvars[r]=[];
+    for(let c=0;c<cols;c++){
+      G.bvars[r][c]=Math.floor(Math.random()*4);
+      if(r===0||r===rows-1||c===0||c===cols-1) G.grid[r][c]=T.SOLID;
+      else if(r%2===0&&c%2===0) G.grid[r][c]=T.SOLID;
+      else G.grid[r][c]=T.FLOOR;
+    }
+  }
+
+  const safe=getSafe(cols,rows);
+  safe.forEach(([r,c])=>{ if(r>=0&&r<rows&&c>=0&&c<cols) G.grid[r][c]=T.FLOOR; });
+
+  for(let r=1;r<rows-1;r++){
+    for(let c=1;c<cols-1;c++){
+      if(G.grid[r][c]===T.FLOOR){
+        if(safe.some(([sr,sc])=>sr===r&&sc===c)) continue;
+        if(Math.random()<bDen){
+          if(Math.random()<0.14){ G.grid[r][c]=T.HARD; G.hardHits[`${c},${r}`]=0; }
+          else G.grid[r][c]=T.BRICK;
+        }
+      }
+    }
+  }
+
+  // Flag in centre
+  const fc=Math.floor(cols/2), fr=Math.floor(rows/2);
+  G.grid[fr][fc]=T.FLOOR;
+  G.flagPos={x:fc,y:fr};
+
+  // Scatter spices
+  G.spices=[];
+  const floors=[];
+  for(let r=1;r<rows-1;r++) for(let c=1;c<cols-1;c++){
+    if(G.grid[r][c]===T.FLOOR&&!(c===1&&r===1)&&!(c===fc&&r===fr))
+      if(!safe.some(([sr,sc])=>sr===r&&sc===c)) floors.push({x:c,y:r});
+  }
+  floors.sort(()=>Math.random()-0.5);
+  const n=Math.min(5+G.cfg.enemies, floors.length);
+  for(let i=0;i<n;i++)
+    G.spices.push({x:floors[i].x,y:floors[i].y,type:SPICES[i%SPICES.length],anim:Math.random()*1000});
+  G.spTotal=G.spices.length; G.spCount=0;
+}
+
+function getSafe(cols,rows){
+  return [
+    [1,1],[1,2],[2,1],[1,3],[3,1],
+    [rows-2,cols-2],[rows-3,cols-2],[rows-2,cols-3],
+    [rows-2,1],[rows-3,1],[rows-2,2],
+    [1,cols-2],[1,cols-3],[2,cols-2],
+  ];
+}
+
+/* ══════════════════════════════════════════════════════════
+   ENEMY SPAWN
+══════════════════════════════════════════════════════════ */
+function spawnEnemies(){
+  const {cols,rows,enemies}=G.cfg;
+  const corners=[
+    {x:cols-2,y:rows-2},{x:1,y:rows-2},{x:cols-2,y:1},
+    {x:cols-3,y:rows-3},{x:2,y:rows-3},{x:cols-3,y:2},
+    {x:4,y:rows-4},{x:cols-4,y:4},{x:cols-4,y:rows-4},
+  ];
+  G.enemies=[];
+  for(let i=0;i<enemies;i++){
+    const sp=corners[i%corners.length];
+    G.enemies.push({
+      id:i,x:sp.x,y:sp.y,dir:"left",
+      moveT:0+(i*80),anim:0,animT:0,
+      dead:false,frozen:false,frozenT:0,
+      chaseT:800+Math.random()*2000,mode:Math.random()<0.6?"chase":"random"
+    });
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   COLLISION
+══════════════════════════════════════════════════════════ */
+function walkable(x,y){
+  if(x<0||y<0||x>=G.cfg.cols||y>=G.cfg.rows) return false;
+  const t=G.grid[y][x];
+  if(t===T.SOLID||t===T.BRICK||t===T.HARD) return false;
+  if(G.bombs.some(b=>b.x===x&&b.y===y)) return false;
+  return true;
+}
+
+const DX={up:0,down:0,left:-1,right:1};
+const DY={up:-1,down:1,left:0,right:0};
+
+/* ══════════════════════════════════════════════════════════
+   UPDATE
+══════════════════════════════════════════════════════════ */
+const MOVE_MS=155;
+let moveAcc=0;
+
+function update(dt){
+  if(!G.running||G.paused) return;
+  G.elapsed+=dt;
+  const p=G.player;
+
+  // Speed boost
+  if(p.speedBoost){ p.speedTimer-=dt; if(p.speedTimer<=0){p.speedBoost=false;} }
+
+  // Player move
+  moveAcc+=dt;
+  const mi=p.speedBoost?MOVE_MS*0.5:MOVE_MS;
+  if(moveAcc>=mi){ moveAcc=0; doMove(); }
+
+  // Anim
+  p.animT+=dt; if(p.animT>180){p.animT=0;p.anim=(p.anim+1)%4;}
+
+  // Invincibility
+  if(p.inv){ p.invTimer-=dt; if(p.invTimer<=0)p.inv=false; }
+
+  // Bombs
+  G.bombs.forEach(b=>{ b.timer-=dt; b.fuse=b.timer/b.maxTimer; if(b.timer<=0&&!b.exploding)doExplode(b); });
+  G.bombs=G.bombs.filter(b=>!b.done);
+
+  // Explosions
+  G.explosions.forEach(e=>e.timer-=dt);
+  G.explosions=G.explosions.filter(e=>e.timer>0);
+
+  // Player vs explosion
+  if(!p.inv&&G.explosions.some(e=>e.cells.some(c=>c.x===p.x&&c.y===p.y))) hitPlayer();
+
+  // Enemies
+  G.enemies.forEach(en=>{
+    if(en.dead) return;
+    if(en.frozen){en.frozenT-=dt;if(en.frozenT<=0)en.frozen=false;return;}
+    en.moveT+=dt; en.animT+=dt;
+    if(en.animT>280){en.animT=0;en.anim=(en.anim+1)%2;}
+    if(en.moveT>=G.cfg.eSpeed){en.moveT=0;enemyMove(en);}
+    if(!en.dead&&G.explosions.some(e=>e.cells.some(c=>c.x===en.x&&c.y===en.y)))killEnemy(en);
+    if(!en.dead&&!p.inv&&en.x===p.x&&en.y===p.y)hitPlayer();
+  });
+  G.enemies=G.enemies.filter(e=>!e.dead);
+
+  // Spices
+  G.spices=G.spices.filter(sp=>{
+    sp.anim+=dt;
+    if(sp.x===p.x&&sp.y===p.y){pickSpice(sp);return false;}
+    return true;
+  });
+
+  // Items
+  G.items=G.items.filter(it=>{
+    it.anim+=dt;
+    if(it.x===p.x&&it.y===p.y){applyItem(it);return false;}
+    return true;
+  });
+
+  checkWin();
+  updateHUD();
+}
+
+function doMove(){
+  const p=G.player;
+  const km={up:["ArrowUp","w","W"],down:["ArrowDown","s","S"],left:["ArrowLeft","a","A"],right:["ArrowRight","d","D"]};
+  for(const dir of ["up","down","left","right"]){
+    const active=km[dir].some(k=>G.keys[k])||G.mobileKeys[dir];
+    if(active){
+      p.dir=dir;
+      const nx=p.x+DX[dir],ny=p.y+DY[dir];
+      if(walkable(nx,ny)){p.x=nx;p.y=ny;p.moving=true;}else p.moving=false;
+      return;
+    }
+  }
+  p.moving=false;
+}
+
+function enemyMove(en){
+  const p=G.player;
+  en.chaseT-=G.cfg.eSpeed;
+  if(en.chaseT<=0){en.mode=en.mode==="chase"?"random":"chase";en.chaseT=1000+Math.random()*2200;}
+
+  const dirs=["up","down","left","right"];
+  if(en.mode==="chase"){
+    const adx=Math.abs(p.x-en.x),ady=Math.abs(p.y-en.y);
+    let pref;
+    if(adx>ady) pref=(p.x>en.x)?["right","down","up","left"]:["left","down","up","right"];
+    else pref=(p.y>en.y)?["down","right","left","up"]:["up","right","left","down"];
+    if(Math.random()<0.22) pref=dirs.sort(()=>Math.random()-0.5);
+    for(const d of pref){
+      if(walkable(en.x+DX[d],en.y+DY[d])){en.dir=d;en.x+=DX[d];en.y+=DY[d];return;}
+    }
+  } else {
+    if(Math.random()<0.65){
+      if(walkable(en.x+DX[en.dir],en.y+DY[en.dir])){en.x+=DX[en.dir];en.y+=DY[en.dir];return;}
+    }
+    for(const d of dirs.sort(()=>Math.random()-0.5)){
+      if(walkable(en.x+DX[d],en.y+DY[d])){en.dir=d;en.x+=DX[d];en.y+=DY[d];return;}
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOMB & EXPLOSION
+══════════════════════════════════════════════════════════ */
+function dropBomb(){
+  const p=G.player;
+  if(p.activeBombs>=p.maxBombs) return;
+  if(G.bombs.some(b=>b.x===p.x&&b.y===p.y)) return;
+  p.activeBombs++;
+  G.bombs.push({x:p.x,y:p.y,timer:G.cfg.bTimer,maxTimer:G.cfg.bTimer,radius:p.radius,fuse:1,exploding:false,done:false});
+}
+
+function doExplode(bomb){
+  bomb.exploding=true;
+  const cells=expCells(bomb);
+  G.explosions.push({cells,timer:620});
+  cells.forEach(cell=>{
+    if(!G.grid[cell.y]) return;
+    const t=G.grid[cell.y][cell.x];
+    if(t===T.BRICK){G.grid[cell.y][cell.x]=T.FLOOR;spawnItem(cell.x,cell.y);}
+    else if(t===T.HARD){
+      const k=`${cell.x},${cell.y}`;
+      if((G.hardHits[k]||0)>=1){G.grid[cell.y][cell.x]=T.FLOOR;delete G.hardHits[k];spawnItem(cell.x,cell.y);}
+      else G.hardHits[k]=1;
+    }
+    G.bombs.forEach(b=>{if(!b.done&&!b.exploding&&b.x===cell.x&&b.y===cell.y)b.timer=0;});
+  });
+  bomb.done=true;
+  G.player.activeBombs=Math.max(0,G.player.activeBombs-1);
+}
+
+function expCells(bomb){
+  const {x:cx,y:cy,radius}=bomb;
+  const cells=[{x:cx,y:cy}];
+  [{dx:0,dy:-1},{dx:0,dy:1},{dx:-1,dy:0},{dx:1,dy:0}].forEach(({dx,dy})=>{
+    for(let i=1;i<=radius;i++){
+      const nx=cx+dx*i,ny=cy+dy*i;
+      if(nx<0||ny<0||nx>=G.cfg.cols||ny>=G.cfg.rows) break;
+      const t=G.grid[ny][nx];
+      if(t===T.SOLID) break;
+      cells.push({x:nx,y:ny});
+      if(t===T.BRICK||t===T.HARD) break;
+    }
+  });
+  return cells;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ITEMS & SPICES
+══════════════════════════════════════════════════════════ */
+function spawnItem(gx,gy){
+  if(Math.random()<0.3){
+    const pu=PU_LIST[Math.floor(Math.random()*PU_LIST.length)];
+    G.items.push({x:gx,y:gy,id:pu.id,label:pu.label,desc:pu.desc,anim:0});
+  }
+}
+
+function applyItem(it){
+  const p=G.player;
+  if(it.id==="speed"){p.speedBoost=true;p.speedTimer=3000;}
+  else if(it.id==="bombup") p.maxBombs=Math.min(p.maxBombs+1,5);
+  else if(it.id==="radius") p.radius=Math.min(p.radius+1,6);
+  else if(it.id==="freeze") G.enemies.forEach(e=>{e.frozen=true;e.frozenT=2500;});
+  p.score+=15;
+  showToast(it.label+" — "+it.desc);
+}
+
+function pickSpice(sp){
+  G.spCount++;
+  G.player.score+=30;
+  showToast(`${sp.type} Rempah dikumpulkan! +30 (${G.spCount}/${G.spTotal})`);
+}
+
+function killEnemy(en){
+  en.dead=true;
+  G.player.score+=50;
+  G.player.kills++;
+  showToast("💥 Penjajah dikalahkan! +50");
+}
+
+function hitPlayer(){
+  const p=G.player;
+  if(p.inv) return;
+  p.lives--;p.inv=true;p.invTimer=2500;
+  if(p.lives<=0){endGame(false);return;}
+  p.x=1;p.y=1;p.activeBombs=0;
+  G.bombs=G.bombs.filter(b=>!(b.x===1&&b.y===1));
+  showToast("💀 Terkena! Nyawa: "+"❤️".repeat(Math.max(0,p.lives)));
+}
+
+/* ══════════════════════════════════════════════════════════
+   WIN CHECK
+══════════════════════════════════════════════════════════ */
+function checkWin(){
+  const p=G.player;
+  const noEnemies=G.enemies.length===0;
+  const allSpices=G.spCount>=G.spTotal;
+  const onFlag=G.flagPos&&p.x===G.flagPos.x&&p.y===G.flagPos.y;
+
+  const mt=document.getElementById("mission-txt");
+  if(!noEnemies) mt.textContent="⚔️ Kalahkan semua penjajah! ("+G.enemies.length+" tersisa)";
+  else if(!allSpices) mt.textContent=`🌶 Kumpulkan rempah! (${G.spCount}/${G.spTotal})`;
+  else if(!onFlag) mt.textContent="🏴 Menuju Bendera Merah Putih!";
+  else mt.textContent="🏆 MERDEKA!";
+
+  if(noEnemies&&allSpices&&onFlag){G.player.score+=500;endGame(true);}
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════════════ */
+function render(){
+  const ctx=G.ctx,{cols,rows}=G.cfg;
+
+  // BG
+  ctx.fillStyle="#0a0e14";
+  ctx.fillRect(0,0,cols*CELL,rows*CELL);
+
+  // Draw bg pattern
+  drawBgPattern(ctx,cols,rows);
+
+  // Tiles
+  for(let r=0;r<rows;r++)
+    for(let c=0;c<cols;c++)
+      drawTile(ctx,c,r,G.grid[r][c],G.bvars[r]?G.bvars[r][c]:0,G.hardHits[`${c},${r}`]||0);
+
+  // Flag
+  if(G.flagPos) drawFlag(ctx,G.flagPos.x,G.flagPos.y);
+
+  // Spices
+  G.spices.forEach(sp=>drawSprite(ctx,sp.x,sp.y,sp.type,sp.anim,"rgba(212,160,23,0.45)"));
+
+  // Items
+  const ic={speed:"⚡",bombup:"💣",radius:"💥",freeze:"❄️"};
+  const ig={speed:"rgba(74,222,128,.5)",bombup:"rgba(96,165,250,.5)",radius:"rgba(251,146,60,.5)",freeze:"rgba(168,85,247,.5)"};
+  G.items.forEach(it=>drawSprite(ctx,it.x,it.y,ic[it.id],it.anim,ig[it.id]));
+
+  // Explosions
+  G.explosions.forEach(e=>drawExp(ctx,e));
+
+  // Bombs
+  G.bombs.forEach(b=>drawBomb(ctx,b));
+
+  // Enemies
+  const esk=ENEMY_SKINS[G.eSkin]||ENEMY_SKINS[0];
+  G.enemies.forEach(en=>{
+    if(en.frozen){
+      ctx.save();ctx.globalAlpha=0.5;
+      ctx.fillStyle="rgba(96,165,250,0.3)";
+      ctx.fillRect(en.x*CELL,en.y*CELL,CELL,CELL);
+      ctx.restore();
+      ctx.font="11px serif";ctx.textAlign="center";
+      ctx.fillText("❄️",en.x*CELL+CELL/2,en.y*CELL+9);
+    }
+    esk.draw(ctx,en.x*CELL+CELL/2,en.y*CELL+CELL/2,CELL,en.anim,en.dir);
+  });
+
+  // Player
+  const psk=PLAYER_SKINS[G.pSkin]||PLAYER_SKINS[0];
+  const flash=G.player.inv&&Math.floor(G.player.invTimer/120)%2===0;
+  psk.draw(ctx,G.player.x*CELL+CELL/2,G.player.y*CELL+CELL/2,CELL,G.player.anim,G.player.dir,flash);
+}
+
+/* ── Background pattern: batik/mosque on floor ─────────── */
+function drawBgPattern(ctx,cols,rows){
+  const t=Date.now();
+  ctx.save();
+  ctx.globalAlpha=0.03;
+  ctx.fillStyle="#d4a017";
+  ctx.font="32px serif";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  const syms=["☪","✦","🕌"];
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      if((c+r)%6===0 && G.grid[r] && G.grid[r][c]===T.FLOOR){
+        ctx.fillText(syms[(c*3+r*7)%syms.length],c*CELL+CELL/2,r*CELL+CELL/2);
+      }
+    }
+  }
+  ctx.restore();
+}
+
+/* ── Tile draw ──────────────────────────────────────────── */
+function drawTile(ctx,cx,cy,type,bv,hh){
+  const x=cx*CELL,y=cy*CELL;
+
+  if(type===T.FLOOR){
+    ctx.fillStyle=(cx+cy)%2===0?"#0d1420":"#0a1018";
+    ctx.fillRect(x,y,CELL,CELL);
+    ctx.strokeStyle="rgba(255,255,255,0.022)";
+    ctx.lineWidth=0.5;ctx.strokeRect(x+.5,y+.5,CELL-1,CELL-1);
+  }
+  else if(type===T.SOLID){
+    const g=ctx.createLinearGradient(x,y,x+CELL,y+CELL);
+    g.addColorStop(0,"#252538");g.addColorStop(1,"#16162a");
+    ctx.fillStyle=g;ctx.fillRect(x,y,CELL,CELL);
+    ctx.fillStyle="#363655";ctx.fillRect(x,y,CELL,3);ctx.fillRect(x,y,3,CELL);
+    ctx.fillStyle="rgba(0,0,0,.35)";ctx.fillRect(x+CELL-3,y,3,CELL);ctx.fillRect(x,y+CELL-3,CELL,3);
+    ctx.fillStyle="#363655";ctx.beginPath();ctx.arc(x+CELL/2,y+CELL/2,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#16162a";ctx.beginPath();ctx.arc(x+CELL/2,y+CELL/2,3,0,Math.PI*2);ctx.fill();
+  }
+  else if(type===T.BRICK){ drawBrick(ctx,x,y,bv); }
+  else if(type===T.HARD)  { drawHard(ctx,x,y,hh); }
+}
+
+function drawBrick(ctx,x,y,v){
+  if(v===0){
+    // Batik Merah
+    ctx.fillStyle="#7c2d12";ctx.fillRect(x,y,CELL,CELL);
+    ctx.fillStyle="#5c1e08";
+    ctx.fillRect(x,y+13,CELL,2);ctx.fillRect(x,y+26,CELL,2);
+    ctx.fillRect(x+19,y,2,13);ctx.fillRect(x+9,y+13,2,13);
+    ctx.fillRect(x+29,y+13,2,13);ctx.fillRect(x+19,y+26,2,14);
+    ctx.fillStyle="rgba(212,160,23,.28)";
+    ctx.beginPath();ctx.arc(x+10,y+7,4,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(x+30,y+20,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#92400e";ctx.fillRect(x,y,CELL,2);ctx.fillRect(x,y,2,CELL);
+  } else if(v===1){
+    // Batu Borobudur
+    ctx.fillStyle="#57534e";ctx.fillRect(x,y,CELL,CELL);
+    ctx.fillStyle="#44403c";
+    for(let i=1;i<4;i++)ctx.fillRect(x,y+i*10,CELL,2);
+    ctx.fillRect(x+13,y,2,10);ctx.fillRect(x+27,y,2,10);
+    ctx.fillRect(x+7,y+10,2,10);ctx.fillRect(x+20,y+10,2,10);ctx.fillRect(x+33,y+10,2,10);
+    ctx.fillRect(x+13,y+20,2,10);ctx.fillRect(x+27,y+20,2,10);
+    ctx.fillRect(x+7,y+30,2,10);ctx.fillRect(x+20,y+30,2,10);
+    ctx.fillStyle="#78716c";ctx.fillRect(x,y,CELL,2);ctx.fillRect(x,y,2,CELL);
+  } else if(v===2){
+    // Kayu Ukir
+    ctx.fillStyle="#78350f";ctx.fillRect(x,y,CELL,CELL);
+    ctx.fillStyle="#5c2508";
+    ctx.fillRect(x+5,y,3,CELL);ctx.fillRect(x+17,y,3,CELL);ctx.fillRect(x+29,y,3,CELL);
+    ctx.fillStyle="rgba(212,160,23,.22)";
+    for(let iy=6;iy<CELL;iy+=12){
+      ctx.beginPath();ctx.arc(x+11,y+iy,3,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(x+23,y+iy+6,3,0,Math.PI*2);ctx.fill();
+    }
+    ctx.fillStyle="#92400e";ctx.fillRect(x,y,CELL,2);ctx.fillRect(x,y,2,CELL);
+  } else {
+    // Kaligrafi Hijau Islami
+    ctx.fillStyle="#14532d";ctx.fillRect(x,y,CELL,CELL);
+    ctx.fillStyle="#d4a017";
+    ctx.fillRect(x,y,CELL,2);ctx.fillRect(x,y+CELL-2,CELL,2);
+    ctx.fillRect(x,y,2,CELL);ctx.fillRect(x+CELL-2,y,2,CELL);
+    ctx.fillRect(x+4,y+4,CELL-8,CELL-8);
+    ctx.fillStyle="#1a6b3a";ctx.fillRect(x+4,y+4,CELL-8,CELL-8);
+    ctx.fillStyle="rgba(212,160,23,.22)";
+    ctx.font="16px serif";ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillText("☪",x+CELL/2,y+CELL/2);
+  }
+}
+
+function drawHard(ctx,x,y,hh){
+  const g=ctx.createLinearGradient(x,y,x+CELL,y+CELL);
+  g.addColorStop(0,"#374151");g.addColorStop(1,"#1f2937");
+  ctx.fillStyle=g;ctx.fillRect(x,y,CELL,CELL);
+  ctx.fillStyle="#4b5563";
+  ctx.fillRect(x+2,y+2,16,16);ctx.fillRect(x+22,y+2,16,16);
+  ctx.fillRect(x+2,y+22,16,16);ctx.fillRect(x+22,y+22,16,16);
+  ctx.fillStyle="#374151";
+  ctx.fillRect(x+4,y+4,12,12);ctx.fillRect(x+24,y+4,12,12);
+  ctx.fillRect(x+4,y+24,12,12);ctx.fillRect(x+24,y+24,12,12);
+  ctx.strokeStyle="#d4a017";ctx.lineWidth=1.5;ctx.strokeRect(x+1,y+1,CELL-2,CELL-2);
+  ctx.font="10px serif";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillStyle=hh===1?"#ef4444":"#d4a017";
+  ctx.fillText(hh===1?"💥":"🔒",x+CELL/2,y+CELL/2);
+  if(hh===1){
+    ctx.strokeStyle="#ef4444";ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x+10,y+5);ctx.lineTo(x+20,y+20);ctx.lineTo(x+30,y+15);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x+5,y+25);ctx.lineTo(x+15,y+30);ctx.lineTo(x+25,y+35);ctx.stroke();
+  }
+}
+
+/* ── Flag ───────────────────────────────────────────────── */
+function drawFlag(ctx,gx,gy){
+  const x=gx*CELL,y=gy*CELL,t=Date.now();
+  const glow=0.35+0.18*Math.sin(t/420);
+  const rad=ctx.createRadialGradient(x+CELL/2,y+CELL/2,2,x+CELL/2,y+CELL/2,CELL);
+  rad.addColorStop(0,`rgba(240,192,64,${glow})`);rad.addColorStop(1,"transparent");
+  ctx.fillStyle=rad;ctx.fillRect(x-4,y-4,CELL+8,CELL+8);
+  ctx.fillStyle="#8a7a60";ctx.fillRect(x+CELL/2-2,y+5,4,CELL-8);
+  const wave=Math.sin(t/300)*2.5;
+  ctx.save();ctx.translate(x+CELL/2,y+7);
+  ctx.fillStyle="#c0392b";
+  ctx.beginPath();ctx.moveTo(2,0);ctx.lineTo(18,wave);ctx.lineTo(18,8+wave);ctx.lineTo(2,8);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#f5f0e0";
+  ctx.beginPath();ctx.moveTo(2,8);ctx.lineTo(18,8+wave);ctx.lineTo(18,16+wave);ctx.lineTo(2,16);ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
+/* ── Generic sprite (emoji with glow) ──────────────────── */
+function drawSprite(ctx,gx,gy,emoji,anim,glowColor){
+  const x=gx*CELL+CELL/2,y=gy*CELL+CELL/2;
+  const bob=Math.sin(anim/500)*3;
+  ctx.save();ctx.translate(x,y+bob);
+  const g=ctx.createRadialGradient(0,0,2,0,0,15);
+  g.addColorStop(0,glowColor);g.addColorStop(1,"transparent");
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,15,0,Math.PI*2);ctx.fill();
+  ctx.font="17px serif";ctx.textAlign="center";ctx.textBaseline="middle";
+  ctx.fillText(emoji,0,1);
+  ctx.restore();
+}
+
+/* ── Explosion ──────────────────────────────────────────── */
+function drawExp(ctx,exp){
+  exp.cells.forEach(cell=>{
+    const prog=1-exp.timer/620,alpha=1-prog*0.5;
+    const x=cell.x*CELL,y=cell.y*CELL;
+    ctx.save();ctx.globalAlpha=alpha;
+    const g=ctx.createRadialGradient(x+CELL/2,y+CELL/2,2,x+CELL/2,y+CELL/2,CELL/2);
+    g.addColorStop(0,"#fff");g.addColorStop(.25,"#ffd700");g.addColorStop(.65,"#ff6600");g.addColorStop(1,"transparent");
+    ctx.fillStyle=g;ctx.fillRect(x,y,CELL,CELL);
+    const sc=0.82+Math.sin(Date.now()/40)*.14;
+    ctx.translate(x+CELL/2,y+CELL/2);ctx.scale(sc,sc);
+    ctx.fillStyle="rgba(255,255,255,.82)";
+    ctx.fillRect(-3,-CELL/2+2,6,CELL-4);ctx.fillRect(-CELL/2+2,-3,CELL-4,6);
+    ctx.restore();
+  });
+}
+
+/* ── Bomb ───────────────────────────────────────────────── */
+function drawBomb(ctx,bomb){
+  const x=bomb.x*CELL+CELL/2,y=bomb.y*CELL+CELL/2;
+  const pulse=1+(1-bomb.fuse)*0.2*Math.sin(Date.now()/80);
+  ctx.save();ctx.translate(x,y);ctx.scale(pulse,pulse);
+  ctx.fillStyle="rgba(0,0,0,.3)";ctx.beginPath();ctx.ellipse(2,13,10,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#1a1a3e";ctx.beginPath();ctx.arc(0,2,13,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#2a2a5e";ctx.beginPath();ctx.arc(-4,-2,6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="rgba(212,160,23,.32)";ctx.font="8px serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("☪",0,2);
+  ctx.strokeStyle="#ff8c00";ctx.lineWidth=2;ctx.lineCap="round";
+  ctx.beginPath();ctx.moveTo(4,-12);ctx.quadraticCurveTo(11,-18,7,-22);ctx.stroke();
+  if(bomb.fuse<0.55&&Math.random()>.5){
+    ctx.fillStyle=bomb.fuse<.3?"#ef4444":"#ffcc00";
+    ctx.beginPath();ctx.arc(7,-22,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(7,-22,2,0,Math.PI*2);ctx.fill();
+  }
+  const rc=bomb.fuse>.5?"#22c55e":bomb.fuse>.25?"#d4a017":"#c0392b";
+  ctx.strokeStyle=rc;ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(0,2,15,-Math.PI/2,-Math.PI/2+Math.PI*2*bomb.fuse);ctx.stroke();
+  ctx.restore();
+}
+
+/* ══════════════════════════════════════════════════════════
+   HUD
+══════════════════════════════════════════════════════════ */
+function updateHUD(){
+  const p=G.player;
+  const $=id=>document.getElementById(id);
+  $("h-score").textContent=p.score;
+  $("h-lives").textContent="❤️".repeat(Math.max(0,p.lives));
+  $("h-enemies").textContent=G.enemies.length;
+  $("h-spices").textContent=`${G.spCount}/${G.spTotal}`;
+  $("h-name").textContent=G.name;
+  const tot=Math.floor(G.elapsed/1000);
+  $("h-timer").textContent=pad(Math.floor(tot/60))+":"+pad(tot%60);
+  $("pu-bombs").textContent=p.maxBombs;
+  $("pu-radius").textContent=p.radius;
+  const sl=$("slot-speed");
+  if(p.speedBoost){
+    $("pu-speed").textContent=Math.ceil(p.speedTimer/1000)+"s";
+    sl.classList.add("speed-on");
+  } else {
+    $("pu-speed").textContent="–";
+    sl.classList.remove("speed-on");
+  }
+}
+function pad(n){return String(n).padStart(2,"0");}
+
+/* ══════════════════════════════════════════════════════════
+   GAME LOOP
+══════════════════════════════════════════════════════════ */
+function loop(ts){
+  if(!G.running) return;
+  const dt=Math.min(ts-(G.lastTime||ts),50);
+  G.lastTime=ts;
+  if(!G.paused){update(dt);render();}
+  G.raf=requestAnimationFrame(loop);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIFECYCLE
+══════════════════════════════════════════════════════════ */
+function startGame(diff,name,pSkin,eSkin){
+  if(G.raf) cancelAnimationFrame(G.raf);
+  G=newState(diff,name,pSkin,eSkin);
+  const canvas=document.getElementById("game-canvas");
+  canvas.width=G.cfg.cols*CELL; canvas.height=G.cfg.rows*CELL;
+  G.ctx=canvas.getContext("2d");
+  buildMap(); spawnEnemies();
+  G.running=true; G.lastTime=0;
+  document.getElementById("mission-txt").textContent="⚔️ Kalahkan semua penjajah!";
+  showScreen("screen-game");
+  updateHUD();
+  G.raf=requestAnimationFrame(ts=>{G.lastTime=ts;G.raf=requestAnimationFrame(loop);});
+}
+
+function endGame(won){
+  G.running=false; if(G.raf) cancelAnimationFrame(G.raf);
+  const tot=Math.floor(G.elapsed/1000);
+  const ts=pad(Math.floor(tot/60))+":"+pad(tot%60);
+  saveScore(G.name,G.player.score,G.diff,G.player.kills,G.spCount);
+
+  if(won){
+    document.getElementById("e-time").textContent=ts;
+    document.getElementById("e-kills").textContent=G.player.kills;
+    document.getElementById("e-spices").textContent=`${G.spCount}/${G.spTotal}`;
+    document.getElementById("e-score").textContent=G.player.score;
+    buildEndingPages();
+    showScreen("screen-ending");
+    startEndParticles();
+  } else {
+    document.getElementById("go-score").textContent=G.player.score;
+    document.getElementById("go-time").textContent=ts;
+    document.getElementById("go-kills").textContent=G.player.kills;
+    document.getElementById("go-spices").textContent=G.spCount;
+    document.getElementById("ov-gameover").classList.remove("hidden");
+  }
+}
+
+function togglePause(){
+  G.paused=!G.paused;
+  const ov=document.getElementById("ov-pause");
+  G.paused?ov.classList.remove("hidden"):ov.classList.add("hidden");
+}
+
+/* ══════════════════════════════════════════════════════════
+   STORY PAGE SYSTEM
+══════════════════════════════════════════════════════════ */
+let sPage=0;
+function buildStoryPages(){
+  const con=document.getElementById("story-pages");
+  const dots=document.getElementById("story-dots");
+  con.innerHTML=""; dots.innerHTML="";
+  INTRO_PAGES.forEach((html,i)=>{
+    const d=document.createElement("div");
+    d.className="s-page pg-text"+(i===0?" on":"");
+    d.innerHTML=html; con.appendChild(d);
+    const dot=document.createElement("div");
+    dot.className="sdot"+(i===0?" on":"");
+    dot.onclick=()=>goStory(i); dots.appendChild(dot);
+  });
+  sPage=0; updStoryNav();
+}
+function goStory(i){
+  document.querySelectorAll("#story-pages .s-page").forEach((p,j)=>p.classList.toggle("on",j===i));
+  document.querySelectorAll("#story-dots .sdot").forEach((d,j)=>d.classList.toggle("on",j===i));
+  sPage=i; updStoryNav();
+  if(i===INTRO_PAGES.length-1) document.getElementById("btn-to-menu").classList.remove("hidden");
+}
+function updStoryNav(){
+  document.getElementById("btn-s-prev").disabled=sPage===0;
+  document.getElementById("btn-s-next").disabled=sPage===INTRO_PAGES.length-1;
+}
+
+let ePage=0;
+function buildEndingPages(){
+  const con=document.getElementById("ending-pages");
+  const dots=document.getElementById("ending-dots");
+  con.innerHTML=""; dots.innerHTML="";
+  ENDING_PAGES.forEach((html,i)=>{
+    const d=document.createElement("div");
+    d.className="e-page pg-text"+(i===0?" on":"");
+    d.innerHTML=html; con.appendChild(d);
+    const dot=document.createElement("div");
+    dot.className="sdot"+(i===0?" on":"");
+    dot.onclick=()=>goEnding(i); dots.appendChild(dot);
+  });
+  ePage=0; updEndNav();
+  const titles=["Fajar Kemerdekaan","Bendera Berkibar","Nilai yang Diwariskan","Generasi Penerus"];
+  document.getElementById("end-chapter-title").textContent=titles[0];
+}
+function goEnding(i){
+  document.querySelectorAll("#ending-pages .e-page").forEach((p,j)=>p.classList.toggle("on",j===i));
+  document.querySelectorAll("#ending-dots .sdot").forEach((d,j)=>d.classList.toggle("on",j===i));
+  ePage=i; updEndNav();
+  const titles=["Fajar Kemerdekaan","Bendera Berkibar","Nilai yang Diwariskan","Generasi Penerus"];
+  document.getElementById("end-chapter-title").textContent=titles[i]||"";
+}
+function updEndNav(){
+  document.getElementById("btn-ep-prev").disabled=ePage===0;
+  const last=ePage===ENDING_PAGES.length-1;
+  document.getElementById("btn-ep-next").disabled=last;
+  document.getElementById("btn-ep-next").textContent=last?"Selesai ✓":"Selanjutnya ▶";
+}
+
+/* ══════════════════════════════════════════════════════════
+   SKIN UI  — FIX: draw after rAF so canvas is visible
+══════════════════════════════════════════════════════════ */
+let selP=0,selE=0;
+
+function buildSkinGrids(){
+  const saved=JSON.parse(localStorage.getItem("bomskuy_skins")||"{}");
+  selP=saved.p||0; selE=saved.e||0;
+  buildGrid("grid-player",PLAYER_SKINS,selP,i=>{selP=i;saveSkins();updatePrevs();});
+  buildGrid("grid-enemy", ENEMY_SKINS, selE,i=>{selE=i;saveSkins();updatePrevs();});
+  updatePrevs();
+}
+
+function buildGrid(id,skins,selIdx,cb){
+  const con=document.getElementById(id);
+  if(!con) return;
+  con.innerHTML="";
+
+  skins.forEach((sk,i)=>{
+    /* ── card wrapper ── */
+    const card=document.createElement("div");
+    card.className="skin-card"+(i===selIdx?" on":"");
+
+    /* ── canvas (MUST use createElement, never innerHTML) ── */
+    const cv=document.createElement("canvas");
+    cv.width=72; cv.height=72;
+    cv.style.display="block";
+    cv.style.background="#1a1510";
+    cv.style.borderRadius="4px";
+
+    /* ── text nodes via createElement to avoid innerHTML nuking canvas ── */
+    const check=document.createElement("span");
+    check.className="sk-check"; check.textContent="✅";
+
+    const nm=document.createElement("span");
+    nm.className="sk-name"; nm.textContent=sk.name;
+
+    const lr=document.createElement("span");
+    lr.className="sk-lore"; lr.textContent=sk.lore;
+
+    /* ── assemble ── */
+    card.appendChild(cv);
+    card.appendChild(check);
+    card.appendChild(nm);
+    card.appendChild(lr);
+
+    /* ── draw skin directly (canvas already in DOM fragment) ── */
+    const ctx=cv.getContext("2d");
+    ctx.fillStyle="#1a1510";
+    ctx.fillRect(0,0,72,72);
+    sk.draw(ctx,36,40,60,0,"down",false);
+
+    /* ── click handler ── */
+    card.addEventListener("click",()=>{
+      con.querySelectorAll(".skin-card").forEach(c=>c.classList.remove("on"));
+      card.classList.add("on"); cb(i);
+    });
+
+    con.appendChild(card);
+  });
+}
+
+function updatePrevs(){
+  drawPrev("prev-player","prev-player-name",PLAYER_SKINS[selP],false);
+  drawPrev("prev-enemy","prev-enemy-name",ENEMY_SKINS[selE],true);
+}
+function drawPrev(cvid,nameid,skin,isEnemy){
+  const cv=document.getElementById(cvid);
+  if(!cv||!skin) return;
+  const ctx=cv.getContext("2d");
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle="#1a1510"; ctx.fillRect(0,0,cv.width,cv.height);
+  if(isEnemy) skin.draw(ctx,cv.width/2,cv.height/2+4,44,0,"down");
+  else skin.draw(ctx,cv.width/2,cv.height/2+4,44,0,"down",false);
+  if(nameid) document.getElementById(nameid).textContent=skin.name;
+}
+function saveSkins(){try{localStorage.setItem("bomskuy_skins",JSON.stringify({p:selP,e:selE}));}catch(_){}}
+
+/* ══════════════════════════════════════════════════════════
+   ENCYCLOPEDIA BUILD
+══════════════════════════════════════════════════════════ */
+function buildEncyc(){
+  const make=(items,containerId)=>{
+    const con=document.getElementById(containerId);
+    if(!con) return;
+    con.innerHTML=items.map(it=>`
+      <div class="encyc-item">
+        <div class="ei-head">
+          <span class="ei-icon">${it.icon}</span>
+          <div><div class="ei-name">${esc(it.name)}</div><div class="ei-type">${esc(it.type)}</div></div>
+        </div>
+        <div class="ei-desc">${esc(it.desc)}</div>
+        ${it.tip?`<div class="ei-tip">${esc(it.tip)}</div>`:""}
+      </div>`).join("");
+  };
+  make(ENCYC.walls,   "enc-walls-grid");
+  make(ENCYC.powerups,"enc-powerups-grid");
+  make(ENCYC.spices,  "enc-spices-grid");
+  make(ENCYC.enemies, "enc-enemies-grid");
+  make(ENCYC.heroes,  "enc-heroes-grid");
+  make(ENCYC.history, "enc-history-grid");
+}
+
+/* ══════════════════════════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════════════════════════ */
+function saveScore(name,score,diff,kills,spices){
+  try{
+    const arr=JSON.parse(localStorage.getItem("bomskuy_scores")||"[]");
+    arr.push({name,score,diff,kills,spices,date:new Date().toISOString()});
+    arr.sort((a,b)=>b.score-a.score);
+    localStorage.setItem("bomskuy_scores",JSON.stringify(arr.slice(0,10)));
+  }catch(_){}
+}
+function renderLB(){
+  const arr=JSON.parse(localStorage.getItem("bomskuy_scores")||"[]");
+  const el=document.getElementById("leaderboard");
+  const dl={easy:"🟢",medium:"🟡",hard:"🟠",extreme:"🔴"};
+  if(!arr.length){
+    el.innerHTML=`<div style="color:var(--dim);font-size:.7rem;text-align:center;padding:14px;">Belum ada skor. Jadilah pahlawan pertama!</div>`;
+    return;
+  }
+  el.innerHTML=arr.slice(0,8).map((s,i)=>`
+    <div class="lb-row">
+      <span class="lb-rank">${["🥇","🥈","🥉","4.","5.","6.","7.","8."][i]}</span>
+      <span class="lb-name">${esc(s.name)}</span>
+      <span class="lb-diff">${dl[s.diff]||""}</span>
+      <span class="lb-score">${s.score}</span>
+    </div>`).join("");
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ══════════════════════════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════════════════════════ */
+function startParticles(cvId){
+  const cv=document.getElementById(cvId);
+  if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const syms=["☪","✦","🌙","🌿","⚡","❋"];
+  const parts=[];
+  const resize=()=>{cv.width=window.innerWidth;cv.height=window.innerHeight;};
+  resize(); window.addEventListener("resize",resize);
+  for(let i=0;i<26;i++) parts.push({
+    x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+    sym:syms[Math.floor(Math.random()*syms.length)],
+    sz:7+Math.random()*13, vx:(Math.random()-.5)*.28, vy:-.12-Math.random()*.28,
+    alpha:.04+Math.random()*.11, col:Math.random()<.5?"#d4a017":"#22c55e"
+  });
+  const anim=()=>{
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.y<-20)p.y=cv.height+20;
+      if(p.x<-20||p.x>cv.width+20)p.x=Math.random()*cv.width;
+      ctx.globalAlpha=p.alpha; ctx.fillStyle=p.col;
+      ctx.font=`${p.sz}px serif`; ctx.textAlign="center";
+      ctx.fillText(p.sym,p.x,p.y);
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(anim);
+  };
+  anim();
+}
+
+function startEndParticles(){
+  const cv=document.getElementById("cv-end-parts");
+  if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const cols=["#d4a017","#c0392b","#f5f0e0","#22c55e","#60a5fa","#f59e0b"];
+  const parts=[];
+  const resize=()=>{cv.width=window.innerWidth;cv.height=window.innerHeight;};
+  resize();
+  for(let i=0;i<70;i++) parts.push({
+    x:Math.random()*window.innerWidth, y:-20-Math.random()*120,
+    vx:(Math.random()-.5)*1.5, vy:.7+Math.random()*1.4,
+    col:cols[Math.floor(Math.random()*cols.length)],
+    sz:5+Math.random()*8, rot:Math.random()*360, rspd:(Math.random()-.5)*4
+  });
+  const anim=()=>{
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.rspd;
+      if(p.y>cv.height+20){p.y=-20;p.x=Math.random()*cv.width;}
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.col; ctx.globalAlpha=0.72;
+      ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz);
+      ctx.restore();
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(anim);
+  };
+  anim();
+}
+
+/* ══════════════════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════════════════ */
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+let _tT;
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.remove("hidden");
+  clearTimeout(_tT); _tT=setTimeout(()=>t.classList.add("hidden"),1900);
+}
+
+/* ══════════════════════════════════════════════════════════
+   INPUT  — improved mobile (no delay)
+══════════════════════════════════════════════════════════ */
+document.addEventListener("keydown",e=>{
+  if(G.keys) G.keys[e.key]=true;
+  if(!G.running||G.paused){if(e.key==="Escape"&&G.paused)togglePause();return;}
+  if(e.key===" "){e.preventDefault();dropBomb();}
+  if(e.key==="Escape") togglePause();
+});
+document.addEventListener("keyup",e=>{if(G.keys)G.keys[e.key]=false;});
+
+function setupMobile(){
+  const keyToDir={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"};
+
+  document.querySelectorAll(".dp[data-key]").forEach(btn=>{
+    const key=btn.dataset.key;
+    const dir=keyToDir[key];
+
+    const press=e=>{
+      e.preventDefault();
+      if(dir && G.mobileKeys) G.mobileKeys[dir]=true;
+      btn.classList.add("pressed");
+    };
+    const release=e=>{
+      e.preventDefault();
+      if(dir && G.mobileKeys) G.mobileKeys[dir]=false;
+      btn.classList.remove("pressed");
+    };
+
+    btn.addEventListener("touchstart",press,{passive:false});
+    btn.addEventListener("touchend",release,{passive:false});
+    btn.addEventListener("touchcancel",release,{passive:false});
+    // Mouse fallback for desktop testing
+    btn.addEventListener("mousedown",press);
+    btn.addEventListener("mouseup",release);
+    btn.addEventListener("mouseleave",release);
+  });
+
+  const bomb=document.getElementById("mobile-bomb");
+  const pressBomb=e=>{e.preventDefault();dropBomb();bomb.classList.add("pressed");};
+  const relBomb=e=>{e.preventDefault();bomb.classList.remove("pressed");};
+  bomb.addEventListener("touchstart",pressBomb,{passive:false});
+  bomb.addEventListener("touchend",relBomb,{passive:false});
+  bomb.addEventListener("touchcancel",relBomb,{passive:false});
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+let selDiff="easy";
+
+document.addEventListener("DOMContentLoaded",()=>{
+  startParticles("cv-intro-parts");
+  startParticles("cv-menu-parts");
+  buildStoryPages();
+  buildEncyc();
+
+  // Intro nav
+  document.getElementById("btn-s-prev").addEventListener("click",()=>goStory(sPage-1));
+  document.getElementById("btn-s-next").addEventListener("click",()=>goStory(sPage+1));
+  document.getElementById("btn-to-menu").addEventListener("click",()=>{
+    showScreen("screen-menu");
+    buildSkinGrids();
+    renderLB();
+  });
+
+  // Menu tabs
+  document.querySelectorAll(".mtab").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(".mtab").forEach(b=>b.classList.remove("on"));
+      btn.classList.add("on");
+      document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("on"));
+      document.getElementById("tab-"+btn.dataset.tab).classList.add("on");
+      if(btn.dataset.tab==="scores") renderLB();
+      if(btn.dataset.tab==="skins") buildSkinGrids();
+    });
+  });
+
+  // Skin tab shortcut buttons
+  document.querySelectorAll(".btn-skin-link").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".mtab").forEach(m=>m.classList.toggle("on",m.dataset.tab==="skins"));
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.toggle("on",p.id==="tab-skins"));
+    buildSkinGrids();
+  }));
+
+  // Encyclopedia inline tabs
+  document.querySelectorAll("#etabs-inline .etab").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll("#etabs-inline .etab").forEach(b=>b.classList.remove("on"));
+      btn.classList.add("on");
+      document.querySelectorAll(".encyc-content").forEach(c=>c.classList.remove("on"));
+      document.getElementById("ec-"+btn.dataset.ec).classList.add("on");
+    });
+  });
+
+  // Difficulty
+  document.querySelectorAll(".diff-btn").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".diff-btn").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on"); selDiff=b.dataset.diff;
+  }));
+
+  // Start
+  const doStart=()=>{
+    const name=document.getElementById("player-name").value.trim();
+    if(!name){
+      const inp=document.getElementById("player-name");
+      inp.style.borderColor="var(--red2)"; inp.focus();
+      inp.placeholder="Nama harus diisi, Pahlawan!";
+      setTimeout(()=>{inp.style.borderColor="";inp.placeholder="Masukkan nama pahlawanmu...";},2200);
+      return;
+    }
+    startGame(selDiff,name,selP,selE);
+  };
+  document.getElementById("btn-start").addEventListener("click",doStart);
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Enter"&&document.getElementById("screen-menu").classList.contains("active"))doStart();
+  });
+
+  // Pause
+  document.getElementById("btn-pause").addEventListener("click",togglePause);
+  document.getElementById("btn-resume").addEventListener("click",togglePause);
+  document.getElementById("btn-quit").addEventListener("click",()=>{
+    G.running=false; if(G.raf)cancelAnimationFrame(G.raf);
+    document.getElementById("ov-pause").classList.add("hidden");
+    showScreen("screen-menu"); renderLB();
+  });
+
+  // Game Over
+  document.getElementById("btn-retry").addEventListener("click",()=>{
+    document.getElementById("ov-gameover").classList.add("hidden");
+    startGame(G.diff,G.name,G.pSkin,G.eSkin);
+  });
+  document.getElementById("btn-go-menu").addEventListener("click",()=>{
+    document.getElementById("ov-gameover").classList.add("hidden");
+    showScreen("screen-menu"); renderLB();
+  });
+
+  // Ending
+  document.getElementById("btn-ep-prev").addEventListener("click",()=>goEnding(ePage-1));
+  document.getElementById("btn-ep-next").addEventListener("click",()=>{if(ePage<ENDING_PAGES.length-1)goEnding(ePage+1);});
+  document.getElementById("btn-end-again").addEventListener("click",()=>{showScreen("screen-menu");renderLB();});
+  document.getElementById("btn-end-menu").addEventListener("click",()=>{showScreen("screen-menu");renderLB();});
+
+  // Clear scores
+  document.getElementById("btn-clear").addEventListener("click",()=>{
+    if(confirm("Hapus semua skor?"))localStorage.removeItem("bomskuy_scores"),renderLB();
+  });
+
+  // Mobile
+  setupMobile();
+});
+
+</script>
+</body>
+</html>
